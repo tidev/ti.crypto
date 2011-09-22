@@ -7,6 +7,7 @@
 
 #import "TiCryptoModule.h"
 #import "TiCryptoCryptorProxy.h"
+#import "TiCryptoKeyProxy.h"
 
 #import "TiUtils.h"
 
@@ -28,15 +29,15 @@
 		CCAlgorithm algorithm = [TiUtils intValue:[self valueForUndefinedKey:@"algorithm"] def:kCCAlgorithmAES128];
 		CCOptions options = [TiUtils intValue:[self valueForUndefinedKey:@"options"] def:0];
 		
-//BUGBUG: This won't work unless it's possible to set hex values in a JS string. Keys are necessarily made up of readable characters.
+		TiCryptoKeyProxy* key = [self valueForUndefinedKey:@"key"];
+		ENSURE_TYPE(key,TiCryptoKeyProxy);
 		
-		NSString* key = [TiUtils stringValue:[self valueForUndefinedKey:@"key"]];
 		NSString* initializationVector = [TiUtils stringValue:[self valueForUndefinedKey:@"initializationVector"]];
 
 		if (CCCryptorCreate(operation, 
 							algorithm,
 							options,
-							[key UTF8String],
+							[key key],
 							[key length],
 							[initializationVector UTF8String],
 							&cryptorRef) != kCCSuccess) {
@@ -87,7 +88,7 @@
 		// Get the input buffer length. If no length is provided then use the length of the buffer.
 		int length = [TiUtils intValue:[args objectForKey:@"dataInLength"] def:-1];
 		if (length < 0) {
-			length = [[dataInBuffer data] length];
+			length = [dataInBuffer length].intValue;
 		}
 		dataInLength = (size_t)length;
 		
@@ -206,7 +207,10 @@
 
 	CCAlgorithm algorithm = [TiUtils intValue:[self valueForUndefinedKey:@"algorithm"] def:kCCAlgorithmAES128];
 	CCOptions options = [TiUtils intValue:[self valueForUndefinedKey:@"options"] def:0];
-	NSString* key = [TiUtils stringValue:[self valueForUndefinedKey:@"key"]];
+
+	TiCryptoKeyProxy* key = [self valueForUndefinedKey:@"key"];
+	ENSURE_TYPE(key,TiCryptoKeyProxy);
+
 	NSString* initializationVector = [TiUtils stringValue:[self valueForUndefinedKey:@"initializationVector"]];
 	
 	TiBuffer* dataInBuffer;
@@ -224,7 +228,7 @@
 	// Get the input buffer length. If no length is provided then use the length of the buffer.
 	int length = [TiUtils intValue:[args objectForKey:@"dataInLength"] def:-1];
 	if (length < 0) {
-		length = [[dataInBuffer data] length];
+		length = [dataInBuffer length].intValue;
 	}
 	dataInLength = (size_t)length;
 	
@@ -272,7 +276,7 @@
 	result = CCCrypt(operation,
 					 algorithm,
 					 options,
-					 [key UTF8String],
+					 [key key],
 					 [key length],
 					 [initializationVector UTF8String],
 					 [[dataInBuffer data] bytes],

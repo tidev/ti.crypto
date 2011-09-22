@@ -105,4 +105,38 @@ MAKE_SYSTEM_PROP(BLOCKSIZE_3DES,kCCBlockSize3DES)
 MAKE_SYSTEM_PROP(BLOCKSIZE_CAST,kCCBlockSizeCAST)
 MAKE_SYSTEM_PROP(BLOCKSIZE_RC2,kCCBlockSizeRC2)
 
+-(TiBuffer*)createBuffer:(id)args
+{
+	ENSURE_SINGLE_ARG(args,NSDictionary);
+	
+	NSMutableData* data;
+	NSString* value;	
+	
+	ENSURE_ARG_OR_NIL_FOR_KEY(value,args,@"value",NSString);
+	if (value != nil) {
+		data = [[NSMutableData alloc] initWithBytes:[value UTF8String] length:[value length]];
+	} else {	
+		ENSURE_ARG_OR_NIL_FOR_KEY(value,args,@"hexValue",NSString);
+		if (value != nil) {
+			data = [[NSMutableData alloc] init];
+			
+			// Format of input string must be hex values separated by a space (e.g. "21 53 02")
+			NSScanner *scanner = [[NSScanner alloc] initWithString:value];
+			unsigned hexValue;
+			while([scanner scanHexInt:&hexValue]) {
+				unsigned char val = hexValue & 0xFF;
+				[data appendBytes:&val length:1];
+			}
+		}
+	}
+	
+    TiBuffer* dataBuffer = [[[TiBuffer alloc] _initWithPageContext:[self executionContext]] autorelease];
+	[dataBuffer setData:data];
+	[data release];
+	
+	NSLog(@"HEX BUFFER SET: %d bytes %@", [[dataBuffer data] length], [dataBuffer data]);
+	
+	return dataBuffer;
+}
+
 @end

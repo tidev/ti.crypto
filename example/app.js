@@ -17,7 +17,7 @@ var crypto = require('ti.crypto');
 Ti.API.info("module is => " + crypto);
 
 var buffer = Ti.createBuffer({value: "Hello World"});
-var key = "12345678901234567890123456789012";
+var key = crypto.createKey({value: "12345678901234567890123456789012"});
 var initializationVector = "abcdefghijklmnop";
 
 Ti.API.info("INITIAL");
@@ -54,20 +54,28 @@ Ti.API.info("Buffer Value: " + buffer.toString());
 
 
 Ti.API.info("---FIPS TEST---");
+var fipsKey = crypto.createKey({hexValue: "00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f"});
 var fipsCryptor = crypto.createCryptor({
 	op: crypto.ENCRYPT,
 	algorithm: crypto.ALGORITHM_AES128,
-	key: "0011223344556677"
+//	options: crypto.OPTION_PKCS7PADDING,
+	key: fipsKey
 });
 
-var fipsBuffer = Ti.createBuffer({value: "0011223344556677"});
+//var fipsBuffer = Ti.createBuffer({value: "0011223344556677"});
+//var fipsBuffer = Ti.createBuffer();
+//crypto.fillBuffer({buffer: fipsBuffer, hexValue: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff"});
+var fipsBuffer = crypto.createBuffer({hexValue: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff"});
+var testBuffer = crypto.createBuffer({value: "aabbccddee"});
+var initializationVector = crypto.createBuffer({hexValue: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"});
 
 Ti.API.info("INITIAL");
 Ti.API.info("Buffer Length: " + fipsBuffer.length);
 Ti.API.info("Buffer Value: " + fipsBuffer.toString());
 
 numBytes = fipsCryptor.encrypt({
-	dataIn: fipsBuffer
+	dataIn: fipsBuffer,
+	initializationVector: initializationVector
 });
 
 Ti.API.info("ENCRYPTED: " + numBytes);
