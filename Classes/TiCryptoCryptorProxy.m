@@ -13,8 +13,19 @@
 
 @implementation TiCryptoCryptorProxy
 
+#pragma mark Proxy Lifecycle
+
+-(id)init
+{
+	// Default setting is to resize the output buffer to fit the required size
+	resizeBuffer = YES;
+	
+	return [super init];
+}
+
 -(void)_destroy
 {
+	// Clean-up and release the cryptor
 	if (cryptorRef != nil) {
 		CCCryptorRelease(cryptorRef);
 		cryptorRef = nil;
@@ -22,108 +33,199 @@
 	[super _destroy];
 }
 
+#pragma mark resizeBuffer property
+
+// resizeBuffer property setter / getter
+-(void)setResizeBuffer:(id)value
+{
+	resizeBuffer = [TiUtils boolValue:value def:NO];
+}
+
+-(id)getResizeBuffer
+{
+	return NUMBOOL(resizeBuffer);
+}
+
+#pragma mark Argument Processing Helpers
+
+// Local structure for encryption options
+typedef struct {
+	CCOperation operation;
+	CCAlgorithm algorithm;
+	CCOptions options;
+	TiCryptoKeyProxy* key;
+	TiBuffer* initializationVector;
+} CryptOptions;
+
+// Local structure for encryption data
+typedef struct {
+	TiBuffer* dataInBuffer;
+	TiBuffer* dataOutBuffer;
+	int dataInLength;
+	int dataOutLength;
+} CryptData;
+
+-(void)prepareCryptOptions:(CryptOptions*)cryptOptions
+{
+	cryptOptions->operation = [TiUtils intValue:[self valueForUndefinedKey:@"operation"] def:kCCEncrypt];
+	cryptOptions->algorithm = [TiUtils intValue:[self valueForUndefinedKey:@"algorithm"] def:kCCAlgorithmAES128];
+	cryptOptions->options = [TiUtils intValue:[self valueForUndefinedKey:@"options"] def:0];
+	
+	// Retrieve the key -- it must be a TiCryptoKeyProxy object to support binary
+	// key data as well as secure cleanup.
+	cryptOptions->key = [self valueForUndefinedKey:@"key"];
+	ENSURE_TYPE(cryptOptions->key,TiCryptoKeyProxy);
+	
+	// Retrieve the initialization vector -- it must be a buffer object (preferably created
+	// from ti.crypto.createBuffer sot hat it supports binary vector data
+	cryptOptions->initializationVector = [self valueForUndefinedKey:@"initializationVector"];
+	ENSURE_TYPE(cryptOptions->initializationVector,TiBuffer);
+}
+
+#pragma mark Cryptographic Context Methods
+
+-(void)prepareCryptData:(CryptData*)cryptData fromArgs:(id)args
+{
+	enum {
+		kArgDataIn = 0,							// REQUIRED
+		kArgCountRequired,
+		kArgDataInLength = kArgCountRequired,	// OPTIONAL
+		kArgDataOut,							// OPTIONAL
+		kArgDataOutLength,						// OPTIONAL
+		kArgCount
+	};
+	
+	ENSURE_ARG_COUNT(args,kArgCountRequired);
+	
+	BOOL hasValue;
+	
+	// Get the input buffer. 
+	ENSURE_ARG_AT_INDEX(cryptData->dataInBuffer,args,kArgDataIn,TiBuffer);
+	
+	// Get the input buffer length. If no length is provided then use the length of the buffer.
+	ENSURE_INT_OR_NIL_AT_INDEX(cryptData->dataInLength,args,kArgDataInLength,hasValue);
+	if (!hasValue || (cryptData->dataInLength < 0)) {
+		cryptData->dataInLength = [cryptData->dataInBuffer length].intValue;
+	}
+	
+	// Get the output buffer. If no output buffer is specified then use the input buffer for output (in-place)
+	ENSURE_ARG_OR_NIL_AT_INDEX(cryptData->dataOutBuffer,args,kArgDataOut,TiBuffer);
+	if (cryptData->dataOutBuffer == nil) {
+		cryptData->dataOutBuffer = cryptData->dataInBuffer;
+	}
+	
+	// Get the output buffer length. If no length is provided then calculate the length needed for the buffer.
+	ENSURE_INT_OR_NIL_AT_INDEX(cryptData->dataOutLength,args,kArgDataOutLength,hasValue);
+	if (!hasValue || (cryptData->dataOutLength < 0)) {
+		cryptData->dataOutLength = [cryptData->dataOutBuffer length].intValue;
+	}
+}
+
+-(void)prepareFinalCryptData:(CryptData*)cryptData fromArgs:(id)args
+{
+	enum {
+		kArgDataOut = 0,						// REQUIRED
+		kArgCountRequired,					
+		kArgDataOutLength = kArgCountRequired,	// OPTIONAL
+		kArgCount
+	};
+	
+	ENSURE_ARG_COUNT(args,kArgCountRequired);
+	BOOL hasValue;
+	
+	// Get the output buffer. 
+	ENSURE_ARG_AT_INDEX(cryptData->dataOutBuffer,args,kArgDataOut,TiBuffer);
+	
+	// Get the output buffer length. If no length is provided then use the length of the buffer.
+	ENSURE_INT_OR_NIL_AT_INDEX(cryptData->dataOutLength,args,kArgDataOutLength,hasValue);
+	if (!hasValue || (cryptData->dataOutLength < 0)) {
+		cryptData->dataOutLength = [cryptData->dataOutBuffer length].intValue;
+	}
+}
+
 -(CCCryptorRef)cryptor
 {
 	if (cryptorRef == nil) {
-		CCOperation operation = [TiUtils intValue:[self valueForUndefinedKey:@"op"] def:kCCEncrypt];
-		CCAlgorithm algorithm = [TiUtils intValue:[self valueForUndefinedKey:@"algorithm"] def:kCCAlgorithmAES128];
-		CCOptions options = [TiUtils intValue:[self valueForUndefinedKey:@"options"] def:0];
+		CryptOptions cryptOptions;
+		[self prepareCryptOptions:&cryptOptions];
 		
-		TiCryptoKeyProxy* key = [self valueForUndefinedKey:@"key"];
-		ENSURE_TYPE(key,TiCryptoKeyProxy);
+		// Create the cryptor object that will be used for stream encryption
+		CCCryptorStatus result = CCCryptorCreate(cryptOptions.operation, 
+												 cryptOptions.algorithm,
+												 cryptOptions.options,
+												 [cryptOptions.key key],
+												 [cryptOptions.key length],
+												 [[cryptOptions.initializationVector data] bytes],
+												 &cryptorRef);
 		
-		NSString* initializationVector = [TiUtils stringValue:[self valueForUndefinedKey:@"initializationVector"]];
-
-		if (CCCryptorCreate(operation, 
-							algorithm,
-							options,
-							[key key],
-							[key length],
-							[initializationVector UTF8String],
-							&cryptorRef) != kCCSuccess) {
+		if (result != kCCSuccess) {
+			NSLog(@"[ERROR] Error creating cryptor - %d", result);
 			return nil;
 		}
 	}
+	
 	return cryptorRef;
 }
 
 -(NSNumber*)getOutputLength:(id)args
 {
-	ENSURE_SINGLE_ARG(args,NSDictionary);
+	enum {
+		kArgLength = 0,
+		kArgFinal = 1,
+		kArgCount
+	};
+	
+	ENSURE_ARG_COUNT(args,kArgCount);
 
 	CCCryptorRef cryptor = [self cryptor];
 	if (cryptor) {
-		int length = [TiUtils intValue:[args objectForKey:@"length"] def:-1];
+		int length = [TiUtils intValue:[args objectAtIndex:kArgLength] def:-1];
 		if (length < 0) {
 			length = 0;
 		}
-		size_t dataOutLength = (size_t)length;
 		
-		BOOL final = [TiUtils boolValue:[args objectForKey:@"final"] def:NO];
-		return NUMINT(CCCryptorGetOutputLength(cryptor, dataOutLength, final));
+		BOOL final = [TiUtils boolValue:[args objectAtIndex:kArgFinal] def:NO];
+		return NUMINT(CCCryptorGetOutputLength(cryptor, (size_t)length, final));
 	}
 	
 	return NUMINT(0);
 }
 
 -(NSNumber*)update:(id)args
-{
-	CCCryptorStatus result = kCCError;
-	ENSURE_SINGLE_ARG(args,NSDictionary);
-	
+{	
 	CCCryptorRef cryptor = [self cryptor];
 	if (cryptor) {
-		TiBuffer* dataInBuffer;
-		TiBuffer* dataOutBuffer;
-		size_t dataInLength;
-		size_t dataOutLength;
-		
-		// Get the input and output buffers. If no output buffer is specified then use the input buffer for output (in-place)
-		ENSURE_ARG_FOR_KEY(dataInBuffer,args,@"dataIn",TiBuffer);
-		ENSURE_ARG_OR_NIL_FOR_KEY(dataOutBuffer,args,@"dataOut",TiBuffer);
-		if (dataOutBuffer == nil) {
-			dataOutBuffer = dataInBuffer;
-		}
-		
-		// Get the input buffer length. If no length is provided then use the length of the buffer.
-		int length = [TiUtils intValue:[args objectForKey:@"dataInLength"] def:-1];
-		if (length < 0) {
-			length = [dataInBuffer length].intValue;
-		}
-		dataInLength = (size_t)length;
-		
-		// Get the output buffer length. If no length is provided then calculate the length needed for the buffer.
-		length = [TiUtils intValue:[args objectForKey:@"dataOutLength"] def:-1];
-		if (length < 0) {
-			dataOutLength = CCCryptorGetOutputLength(cryptor,dataInLength,NO);
-			if (dataOutLength == 0) {
-				dataOutLength = dataInLength;
+		CryptData cryptData;
+		[self prepareCryptData:&cryptData fromArgs:args];	
+		 
+		// If resize output buffer is specified, then set the output buffer size so that it is
+		// large enough to hold the result
+		if (resizeBuffer) {
+			int neededLength = (int)CCCryptorGetOutputLength(cryptor,cryptData.dataInLength,NO);
+			if (neededLength == 0) {
+				neededLength = cryptData.dataInLength;
 			}
-		} else {
-			dataOutLength = (size_t)length;
+			// Call 'setLength' to make sure that the TiBuffer object allocates the memory for the data
+			if (neededLength > cryptData.dataOutLength) {
+				cryptData.dataOutLength = neededLength;
+				[cryptData.dataOutBuffer setLength:NUMINT(neededLength)];
+			}
 		}
-		
-		// Call 'setLength' to make sure that the TiBuffer object allocates the memory for the data
-		[dataOutBuffer setLength:NUMINT(dataOutLength)];
-		
-		NSLog(@"Preparing to update");
-		NSLog(@"Input length: %d value: %@", dataInLength, [dataInBuffer data]);
-		NSLog(@"Output length: %d", dataOutLength);
-				
+		 
 		size_t numBytesMoved = 0;
-		result = CCCryptorUpdate(cryptor,
-								 [[dataInBuffer data] bytes],
-								 dataInLength,
-								 [[dataOutBuffer data] mutableBytes],
-								 dataOutLength,
-								 &numBytesMoved);
+		CCCryptorStatus result = CCCryptorUpdate(cryptor,
+												 [[cryptData.dataInBuffer data] bytes],
+												 (size_t)cryptData.dataInLength,
+												 [[cryptData.dataOutBuffer data] mutableBytes],
+												 (size_t)cryptData.dataOutLength,
+												 &numBytesMoved);
 		
 		if (result == kCCSuccess) {
-			NSLog(@"SUCCESS: %d", numBytesMoved);
-			[dataOutBuffer setLength:NUMINT(numBytesMoved)];
-			NSLog(@"Data: %@",[dataOutBuffer data]);
+			if (resizeBuffer) {
+				[cryptData.dataOutBuffer setLength:NUMINT(numBytesMoved)];
+			}
 		} else {
-			NSLog(@"Error: %d", result);
+			NSLog(@"[ERROR] Error during crypt operation - %d", result);
 		}
 		
 		return (result == kCCSuccess) ? NUMINT(numBytesMoved) : NUMINT(result);
@@ -132,61 +234,63 @@
 	return NUMINT(kCCError);
 }
 
+-(NSNumber*)final:(id)args
+{
+	CCCryptorRef cryptor = [self cryptor];
+	if (cryptor) {
+		CryptData cryptData;
+		[self prepareFinalCryptData:&cryptData fromArgs:args];	
+		
+		// If resize output buffer is specified, then set the output buffer size so that it is
+		// large enough to hold the result
+		if (resizeBuffer) {
+			int neededLength = (int)CCCryptorGetOutputLength(cryptor,0,YES);
+			// Call 'setLength' to make sure that the TiBuffer object allocates the memory for the data
+			if (neededLength > cryptData.dataOutLength) {
+				cryptData.dataOutLength = neededLength;
+				[cryptData.dataOutBuffer setLength:NUMINT(cryptData.dataOutLength)];
+			}
+		}
+		
+		size_t numBytesMoved = 0;
+		CCCryptorStatus result = CCCryptorFinal(cryptor,
+												[[cryptData.dataOutBuffer data] mutableBytes],
+												(size_t)cryptData.dataOutLength,
+												&numBytesMoved);
+		
+		if (result == kCCSuccess) {
+			if (resizeBuffer) {
+				[cryptData.dataOutBuffer setLength:NUMINT(numBytesMoved)];
+			}
+		} else {
+			NSLog(@"[ERROR] Error during final operation - %d", result);
+		}
+		
+		return (result == kCCSuccess) ? NUMINT(numBytesMoved) : NUMINT(result);
+	}
+	
+	return NUMINT(kCCError);
+}
+
+
 -(NSNumber*)reset:(id)args
 {
-	CCCryptorStatus result = kCCError;
-	ENSURE_SINGLE_ARG_OR_NIL(args,NSDictionary);
+	enum {
+		kArgInitializationVector = 0,	// OPTIONAL
+		kArgCount
+	};
 	
+	CCCryptorStatus result = kCCError;
 	CCCryptorRef cryptor = [self cryptor];
 	if (cryptor) {
 		TiBuffer* initializationVector;
-		
-		ENSURE_ARG_OR_NIL_FOR_KEY(initializationVector,args,@"initializationVector",TiBuffer);
+		ENSURE_ARG_OR_NIL_AT_INDEX(initializationVector,args,kArgInitializationVector,TiBuffer);
 		
 		result = CCCryptorReset(cryptor,
 								[[initializationVector data] bytes]);
 	}
 	
 	return NUMINT(result);
-}
-
--(NSNumber*)final:(id)args
-{
-	CCCryptorStatus result = kCCError;
-	ENSURE_SINGLE_ARG(args,NSDictionary);
-	
-	CCCryptorRef cryptor = [self cryptor];
-	if (cryptor) {
-		TiBuffer* dataOutBuffer;
-		size_t dataOutLength;
-		
-		// Get the output buffers. 
-		ENSURE_ARG_FOR_KEY(dataOutBuffer,args,@"dataOut",TiBuffer);
-		
-		// Get the output buffer length. If no length is provided then calculate the length needed for the buffer.
-		int length = [TiUtils intValue:[args objectForKey:@"dataOutLength"] def:-1];
-		if (length < 0) {
-			length = CCCryptorGetOutputLength(cryptor,0,YES);
-		}
-		dataOutLength = (size_t)length;
-		
-		// Call 'setLength' to make sure that the TiBuffer object allocates the memory for the data
-		[dataOutBuffer setLength:NUMINT(dataOutLength)];
-		
-		size_t numBytesMoved = 0;
-		result = CCCryptorFinal(cryptor,
-								 [[dataOutBuffer data] mutableBytes],
-								 dataOutLength,
-								 &numBytesMoved);
-		
-		if (result == kCCSuccess) {
-			[dataOutBuffer setLength:NUMINT(numBytesMoved)];
-		}
-		
-		return (result == kCCSuccess) ? NUMINT(numBytesMoved) : NUMINT(result);
-	}
-	
-	return NUMINT(kCCError);
 }
 
 -(NSNumber*)release:(id)args
@@ -200,110 +304,78 @@
 	return NUMINT(result);
 }
 
--(int)crypt:(CCOperation)operation args:(id)args
+#pragma mark Single-shot Encryption Methods
+
+-(NSNumber*)crypt:(CCOperation)operation args:(id)args
 {
-	CCCryptorStatus result = kCCError;
-	ENSURE_SINGLE_ARG(args,NSDictionary);
-
-	CCAlgorithm algorithm = [TiUtils intValue:[self valueForUndefinedKey:@"algorithm"] def:kCCAlgorithmAES128];
-	CCOptions options = [TiUtils intValue:[self valueForUndefinedKey:@"options"] def:0];
-
-	TiCryptoKeyProxy* key = [self valueForUndefinedKey:@"key"];
-	ENSURE_TYPE(key,TiCryptoKeyProxy);
-
-	NSString* initializationVector = [TiUtils stringValue:[self valueForUndefinedKey:@"initializationVector"]];
+	CryptOptions cryptOptions;
+	[self prepareCryptOptions:&cryptOptions];
 	
-	TiBuffer* dataInBuffer;
-	TiBuffer* dataOutBuffer;
-	size_t dataInLength;
-	size_t dataOutLength;
+	CryptData cryptData;
+	[self prepareCryptData:&cryptData fromArgs:args];	
 	
-	// Get the input and output buffers. If no output buffer is specified then use the input buffer for output (in-place)
-	ENSURE_ARG_FOR_KEY(dataInBuffer,args,@"dataIn",TiBuffer);
-	ENSURE_ARG_OR_NIL_FOR_KEY(dataOutBuffer,args,@"dataOut",TiBuffer);
-	if (dataOutBuffer == nil) {
-		dataOutBuffer = dataInBuffer;
-	}
-	
-	// Get the input buffer length. If no length is provided then use the length of the buffer.
-	int length = [TiUtils intValue:[args objectForKey:@"dataInLength"] def:-1];
-	if (length < 0) {
-		length = [dataInBuffer length].intValue;
-	}
-	dataInLength = (size_t)length;
-	
-	// Get the output buffer length. If no length is provided then calculatre the length needed for the buffer.
-	length = [TiUtils intValue:[args objectForKey:@"dataOutLength"] def:-1];
-	if (length < 0) {
-		switch (algorithm) {
+	// If resize output buffer is specified, then set the output buffer size so that it is
+	// large enough to hold the result. We need to calculate it ourselves here since we don't
+	// allocate an actual cryptor in this workflow.
+	if (resizeBuffer) {
+		int neededLength = cryptData.dataInLength;
+		switch (cryptOptions.algorithm) {
 			case kCCAlgorithmAES128:
-				dataOutLength = dataInLength + kCCBlockSizeAES128;
+				neededLength += kCCBlockSizeAES128;
 				break;
 			case kCCAlgorithmDES:
-				dataOutLength = dataInLength + kCCBlockSizeDES;
+				neededLength += kCCBlockSizeDES;
 				break;
 			case kCCAlgorithm3DES:
-				dataOutLength = dataInLength + kCCBlockSize3DES;
+				neededLength += kCCBlockSize3DES;
 				break;
 			case kCCAlgorithmCAST:
-				dataOutLength = dataInLength + kCCBlockSizeCAST;
+				neededLength += kCCBlockSizeCAST;
 				break;
 			case kCCAlgorithmRC4:
 			case kCCAlgorithmRC2:
-				dataOutLength = dataInLength + kCCBlockSizeRC2;
-				break;
-			default:
-				dataOutLength = dataInLength;
+				neededLength += kCCBlockSizeRC2;
 				break;
 		}
-	} else {
-		dataOutLength = (size_t)length;
+		// Call 'setLength' to make sure that the TiBuffer object allocates the memory for the data
+		if (neededLength > cryptData.dataOutLength) {
+			cryptData.dataOutLength = neededLength;
+			[cryptData.dataOutBuffer setLength:NUMINT(neededLength)];
+		}
 	}
-	// Call 'setLength' to make sure that the TiBuffer object allocates the memory for the data
-	[dataOutBuffer setLength:NUMINT(dataOutLength)];
-	
-	NSLog(@"Preparing to crypt");
-	NSLog(@"Input length: %d value: %@", dataInLength, [dataInBuffer data]);
-	NSLog(@"Output length: %d", dataOutLength);
-	
-	NSLog(@"Operation: %d",operation);
-	NSLog(@"Algorithm: %d",algorithm);
-	NSLog(@"Options: %d",options);
-	NSLog(@"Key: %@",key);
-	NSLog(@"InitializationVector: %@",initializationVector);
 	
 	size_t numBytesMoved = 0;
-	result = CCCrypt(operation,
-					 algorithm,
-					 options,
-					 [key key],
-					 [key length],
-					 [initializationVector UTF8String],
-					 [[dataInBuffer data] bytes],
-					 dataInLength,
-					 [[dataOutBuffer data] mutableBytes],
-					 dataOutLength,
-					 &numBytesMoved);
+	CCCryptorStatus result = CCCrypt(operation,
+									 cryptOptions.algorithm,
+									 cryptOptions.options,
+									 [cryptOptions.key key],
+									 [cryptOptions.key length],
+									 [[cryptOptions.initializationVector data] bytes],
+									 [[cryptData.dataInBuffer data] bytes],
+									 (size_t)cryptData.dataInLength,
+									 [[cryptData.dataOutBuffer data] mutableBytes],
+									 (size_t)cryptData.dataOutLength,
+									 &numBytesMoved);
 	
 	if (result == kCCSuccess) {
-		NSLog(@"SUCCESS: %d", numBytesMoved);
-		[dataOutBuffer setLength:NUMINT(numBytesMoved)];
-		NSLog(@"Data: %@",[dataOutBuffer data]);
+		if (resizeBuffer) {
+			[cryptData.dataOutBuffer setLength:NUMINT(numBytesMoved)];
+		}
 	} else {
-		NSLog(@"ERROR: %d", result);
+		NSLog(@"[ERROR] Error during crypt operation - %d", result);
 	}
 		
-	return (result == kCCSuccess) ? numBytesMoved : result;
+	return (result == kCCSuccess) ? NUMINT(numBytesMoved) : NUMINT(result);
 }
 
 -(NSNumber*)encrypt:(id)args
 {
-	return NUMINT([self crypt:kCCEncrypt args:args]);
+	return [self crypt:kCCEncrypt args:args];
 }
 
 -(NSNumber*)decrypt:(id)args
 {
-	return NUMINT([self crypt:kCCDecrypt args:args]);
+	return [self crypt:kCCDecrypt args:args];
 }
 
 @end

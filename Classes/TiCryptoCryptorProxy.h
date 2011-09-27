@@ -11,6 +11,7 @@
 
 @private
 	CCCryptorRef	cryptorRef;
+	BOOL			resizeBuffer;
 }
 
 @end

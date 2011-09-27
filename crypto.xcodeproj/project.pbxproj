@@ -28,12 +28,6 @@
 		24DE9E1211C5FE74003F90F6 /* TiCryptoModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* TiCryptoModuleAssets.m */; };
 		A245EEC2142AC06500407C3B /* TiCryptoCryptorProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A245EEC0142AC06500407C3B /* TiCryptoCryptorProxy.h */; };
 		A245EEC3142AC06500407C3B /* TiCryptoCryptorProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A245EEC1142AC06500407C3B /* TiCryptoCryptorProxy.m */; };
-		A287078A142BF99E00866840 /* TiCryptoKeyChainItemProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2870788142BF99E00866840 /* TiCryptoKeyChainItemProxy.h */; };
-		A287078B142BF99E00866840 /* TiCryptoKeyChainItemProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2870789142BF99E00866840 /* TiCryptoKeyChainItemProxy.m */; };
-		A287078E142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A287078C142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.h */; };
-		A287078F142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A287078D142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.m */; };
-		A2870792142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2870790142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.h */; };
-		A2870793142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2870791142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.m */; };
 		A2870796142BF9F000866840 /* TiCryptoKeyProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = A2870794142BF9F000866840 /* TiCryptoKeyProxy.h */; };
 		A2870797142BF9F000866840 /* TiCryptoKeyProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = A2870795142BF9F000866840 /* TiCryptoKeyProxy.m */; };
 		AA747D9F0F9514B9006C5449 /* TiCrypto_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* TiCrypto_Prefix.pch */; };
@@ -58,12 +52,6 @@
 		24DE9E1011C5FE74003F90F6 /* TiCryptoModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiCryptoModuleAssets.m; path = Classes/TiCryptoModuleAssets.m; sourceTree = "<group>"; };
 		A245EEC0142AC06500407C3B /* TiCryptoCryptorProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiCryptoCryptorProxy.h; path = Classes/TiCryptoCryptorProxy.h; sourceTree = "<group>"; };
 		A245EEC1142AC06500407C3B /* TiCryptoCryptorProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiCryptoCryptorProxy.m; path = Classes/TiCryptoCryptorProxy.m; sourceTree = "<group>"; };
-		A2870788142BF99E00866840 /* TiCryptoKeyChainItemProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiCryptoKeyChainItemProxy.h; path = Classes/TiCryptoKeyChainItemProxy.h; sourceTree = "<group>"; };
-		A2870789142BF99E00866840 /* TiCryptoKeyChainItemProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiCryptoKeyChainItemProxy.m; path = Classes/TiCryptoKeyChainItemProxy.m; sourceTree = "<group>"; };
-		A287078C142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiCryptoKeyChainItemPasswordProxy.h; path = Classes/TiCryptoKeyChainItemPasswordProxy.h; sourceTree = "<group>"; };
-		A287078D142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiCryptoKeyChainItemPasswordProxy.m; path = Classes/TiCryptoKeyChainItemPasswordProxy.m; sourceTree = "<group>"; };
-		A2870790142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiCryptoKeyChainItemKeyProxy.h; path = Classes/TiCryptoKeyChainItemKeyProxy.h; sourceTree = "<group>"; };
-		A2870791142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiCryptoKeyChainItemKeyProxy.m; path = Classes/TiCryptoKeyChainItemKeyProxy.m; sourceTree = "<group>"; };
 		A2870794142BF9F000866840 /* TiCryptoKeyProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiCryptoKeyProxy.h; path = Classes/TiCryptoKeyProxy.h; sourceTree = "<group>"; };
 		A2870795142BF9F000866840 /* TiCryptoKeyProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiCryptoKeyProxy.m; path = Classes/TiCryptoKeyProxy.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* TiCrypto_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiCrypto_Prefix.pch; sourceTree = SOURCE_ROOT; };
@@ -121,12 +109,6 @@
 				A245EEC1142AC06500407C3B /* TiCryptoCryptorProxy.m */,
 				A2870794142BF9F000866840 /* TiCryptoKeyProxy.h */,
 				A2870795142BF9F000866840 /* TiCryptoKeyProxy.m */,
-				A2870788142BF99E00866840 /* TiCryptoKeyChainItemProxy.h */,
-				A2870789142BF99E00866840 /* TiCryptoKeyChainItemProxy.m */,
-				A287078C142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.h */,
-				A287078D142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.m */,
-				A2870790142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.h */,
-				A2870791142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -151,9 +133,6 @@
 				24DD6CF91134B3F500162E58 /* TiCryptoModule.h in Headers */,
 				24DE9E1111C5FE74003F90F6 /* TiCryptoModuleAssets.h in Headers */,
 				A245EEC2142AC06500407C3B /* TiCryptoCryptorProxy.h in Headers */,
-				A287078A142BF99E00866840 /* TiCryptoKeyChainItemProxy.h in Headers */,
-				A287078E142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.h in Headers */,
-				A2870792142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.h in Headers */,
 				A2870796142BF9F000866840 /* TiCryptoKeyProxy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,9 +207,6 @@
 				24DD6CFA1134B3F500162E58 /* TiCryptoModule.m in Sources */,
 				24DE9E1211C5FE74003F90F6 /* TiCryptoModuleAssets.m in Sources */,
 				A245EEC3142AC06500407C3B /* TiCryptoCryptorProxy.m in Sources */,
-				A287078B142BF99E00866840 /* TiCryptoKeyChainItemProxy.m in Sources */,
-				A287078F142BF9B100866840 /* TiCryptoKeyChainItemPasswordProxy.m in Sources */,
-				A2870793142BF9C400866840 /* TiCryptoKeyChainItemKeyProxy.m in Sources */,
 				A2870797142BF9F000866840 /* TiCryptoKeyProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -13,6 +13,8 @@
 
 -(void)secureRelease
 {
+	NSLog(@"KEY: SECURE RELEASE");
+	
 	[data resetBytesInRange:NSMakeRange(0, [data length])];
 	RELEASE_TO_NIL(data);
 }
