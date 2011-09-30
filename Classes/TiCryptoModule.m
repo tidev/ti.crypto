@@ -87,6 +87,12 @@
 		if (value != nil) {
 			ENSURE_TYPE(value,NSString);
 			data = [TiCryptoUtils convertFromHex:value];
+		} else {
+			value = [args objectForKey:@"base64Value"];
+			if (value != nil) {
+				ENSURE_TYPE(value,NSString);
+				data = [TiCryptoUtils base64decode:value];
+			}
 		}
 	}
 	
@@ -94,6 +100,13 @@
 	dataBuffer.data = data;	
 	
 	return dataBuffer;
+}
+
+-(NSString*)base64encode:(id)args
+{
+	ENSURE_SINGLE_ARG(args,TiBuffer);
+	
+	return [TiCryptoUtils base64encode:args];
 }
 
 #pragma mark Constants

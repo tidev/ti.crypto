@@ -17,6 +17,7 @@ var App = {
 	}
 };
 
+// Load the crypto modules
 App.crypto = require('ti.crypto');
 
 Ti.include ( 'ui.js' );

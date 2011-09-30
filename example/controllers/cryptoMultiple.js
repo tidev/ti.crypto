@@ -1,3 +1,33 @@
+// This example demonstrates the usage of the crypto APIs to encrypt multiple blocks of data
+//
+// The general usage of the multiple crypt APIs is as follows:
+//
+// 1. Create a key using the crypto.createKey API
+// 2. Create an initialization vector using the Ti.createBuffer API (if needed -- the default is a zero-filled vector)
+// 3. Create a cryptor using the crypto.createCryptor API
+// 4. To encrypt:
+//    a. Set the operation to crypto.ENCRYPT (if not already set)
+//    b. Create a buffer to hold all of the encrypted data
+//    c. Create a buffer to receive the encrypted data (optionally, use the input buffer to contain the encrypted data)
+//    d. Update the buffer containing the data to encrypt
+//    e. Call the update method on the cryptor created in step 3
+//    f. Append result to the buffer holding all of the encrypted data
+//    g. Repeat d-f until all data has been encrypted
+//    h. Call the final method on the cryptor created in step 3
+//    i. Append result to the buffer holding all of the encrypted data
+//    j. Call the release method on the cryptor created in step 3
+// 5. To decrypt:
+//    a. Set the operation to crypto.DECRYPT (if not already set)
+//    b. Create a buffer to hold all of the decrypted data
+//    c. Create a buffer to receive the decrypted data (optionally, use the input buffer to contain the decrypted data)
+//    d. Update the buffer containing the data to decrypt
+//    e. Call the update method on the cryptor created in step 3
+//    f. Append result to the buffer holding all of the decrypted data
+//    g. Repeat d-f until all data has been decrypted
+//    h. Call the final method on the cryptor created in step 3
+//    i. Append result to the buffer holding all of the decrypted data
+//    j. Call the release method on the cryptor created in step 3
+
 App.controllers.cryptoMultiple = function () {
 	var API = {
 		params: null,
@@ -12,6 +42,7 @@ App.controllers.cryptoMultiple = function () {
 		init: function (params) {
 			API.params = params;
 
+			// For this example, create a key to use based on the key size for the selected algorithm
 			// Keys can be defined using text strings ('value:') or hex values ('hexValue:')
 			switch (params.keySize) {
 				case 1:
@@ -54,7 +85,7 @@ App.controllers.cryptoMultiple = function () {
 				initializationVector: API.initializationVector
 			});
 			
-			// Create a large, fixed size buffer to be used for encryption / decryption
+			// Create a fixed size buffer to be used for encryption
 			API.fixedBuffer = Ti.createBuffer();
 			API.fixedBuffer.length = 1024;
 			
@@ -62,8 +93,8 @@ App.controllers.cryptoMultiple = function () {
 			API.encryptionBuffer = Ti.createBuffer();			
 			
 			// NOTE: Set resizeBuffer to false if you do not want the output buffer to be resized to fit the
-			// size needed for encryption / decryption. In this example we are creating a large, fixed size buffer to
-			// be reused each time that update is called to minimize memory reallocations.
+			// size needed for encryption / decryption. In this example we are creating a fixed size buffer to
+			// be reused each time that update is called in order to minimize memory reallocations.
 			API.cryptor.resizeBuffer = false;
 		},
 		
@@ -81,6 +112,10 @@ App.controllers.cryptoMultiple = function () {
 		handleUpdate: function(e) {
 			API.cryptor.operation = App.crypto.ENCRYPT;
 			
+			// Make sure to set the resizeBuffer flag to false since the decryption operation may have changed its value
+			API.cryptor.resizeBuffer = false;
+			
+			// Create the buffer containing the original plain text that we want to encrypt
 			var buffer = App.crypto.createBuffer({ value: API.plainTextField.value + '\n' });
 			
 			// For this example, use the same buffer for both input and output (in-place)
@@ -90,12 +125,11 @@ App.controllers.cryptoMultiple = function () {
 			// Append the result to our encryption buffer
 			API.encryptionBuffer.append(API.fixedBuffer, 0, numBytes);
 			
-			Ti.API.info('NumBytes: ' + numBytes);
 			if (numBytes < 0) {
 				alert('Error occurred during encryption: ' + numBytes);
 			} else {
 				// Set the value of the encrypted text (base64 encoded for readability)
-				API.cipherTextField.value = Ti.Utils.base64encode(API.encryptionBuffer.toBlob()).toString();
+				API.cipherTextField.value = App.crypto.base64encode(API.encryptionBuffer);
 			}
 			
 			// Clear the plain text field for the next update
@@ -104,13 +138,21 @@ App.controllers.cryptoMultiple = function () {
 		},
 	
 		handleFinal: function(e) {
+			// Make sure to set the resizeBuffer flag to false since the decryption operation may have changed its value
+			API.cryptor.resizeBuffer = false;
+
 			var numBytes = API.cryptor.final(API.fixedBuffer);
 			if (numBytes > 0) {
+				// Append the result to our encryption buffer
 				API.encryptionBuffer.append(API.fixedBuffer, 0, numBytes);
+				
+				API.cipherTextField.value = App.crypto.base64encode(API.encryptionBuffer);
 			}
 			
+			// We are done with this cryptor operation -- release it so it can be reused
 			API.cryptor.release();
 			
+			// Fire off the decryption and display the result
 			API.doDecryption();
 			
 			// Reset fields in case another encryption begins
@@ -122,22 +164,27 @@ App.controllers.cryptoMultiple = function () {
 		doDecryption: function() {
 			API.cryptor.operation = App.crypto.DECRYPT;
 			
+			// For this example, we want the decryption buffer to be auto-sized to hold the decrypted text
 			API.cryptor.resizeBuffer = true;
 			
+			// Create the buffer to hold the decryption result and the cumulative decrypted text
 			var decryptionBuffer = Ti.createBuffer();
 			var decryptedText = Ti.createBuffer();
 			
+			// For this example we are providing both an input buffer and a separate output buffer
 			var numBytes = API.cryptor.update(API.encryptionBuffer, -1, decryptionBuffer);
 			if (numBytes > 0) {
 				decryptedText.append(decryptionBuffer, 0, numBytes);
 			}
 			
+			// Since we decrypted the entire encryption buffer in one call the only thing left to do is call final
+			// to get any remaining data in the decryption buffer
 			numBytes = API.cryptor.final(decryptionBuffer);
 			if (numBytes > 0) {
 				decryptedText.append(decryptionBuffer, 0, numBytes);
 			}
 			
-			API.cryptor.resizeBuffer = false;
+			// We are done with this cryptor operation -- release it so it can be reused
 			API.cryptor.release();
 						
 			Ti.UI.createAlertDialog({

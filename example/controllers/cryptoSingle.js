@@ -1,3 +1,19 @@
+// This example demonstrates the usage of the single-shot crypto API
+//
+// The usage of the single-shot crypt APIs is as follows:
+//
+// 1. Create a key using the crypto.createKey API
+// 2. Create an initialization vector using the Ti.createBuffer API (if needed -- the default is a zero-filled vector)
+// 3. Create a cryptor using the crypto.createCryptor API
+// 4. To encrypt:
+//    a. Create a buffer containing the data to encrypt
+//    b. Create a buffer to receive the encrypted data (optionally, use the input buffer to contain the encrypted data)
+//    c. Call the encrypt method on the cryptor created in step 3
+// 5. To decrypt:
+//    a. Create a buffer containing the data to decrypt
+//    b. Create a buffer to receive the unencrypted data (optionally, use the input buffer to contain the decrypted data)
+//    c. Call the decrypt method on the cryptor created in step 4
+
 App.controllers.cryptoSingle = function () {
 	var API = {
 		params: null,
@@ -10,6 +26,7 @@ App.controllers.cryptoSingle = function () {
 		init: function (params) {
 			API.params = params;
 
+			// For this example, create a key to use based on the key size for the selected algorithm
 			// Keys can be defined using text strings ('value:') or hex values ('hexValue:')
 			switch (params.keySize) {
 				case 1:
@@ -63,18 +80,18 @@ App.controllers.cryptoSingle = function () {
 		},
 		
 		handleEncrypt: function(e) {
+			// Create the buffer containing the original plain text that we want to encrypt
 			var buffer = App.crypto.createBuffer({ value: API.plainTextField.value });
 			
 			// For this example, use the same buffer for both input and output (in-place)
 			// You can specify separate buffers for both input and output if desired
 			var numBytes = API.cryptor.encrypt(buffer);
 			
-			Ti.API.info('NumBytes: ' + numBytes);
 			if (numBytes < 0) {
 				alert('Error occurred during encryption: ' + numBytes);
 			} else {
 				// Set the value of the encrypted text (base64 encoded for readability)
-				API.cipherTextField.value = Ti.Utils.base64encode(buffer.toBlob()).toString();
+				API.cipherTextField.value = App.crypto.base64encode(buffer);
 			}
 			
 			API.plainTextField.blur();
@@ -83,7 +100,7 @@ App.controllers.cryptoSingle = function () {
 		handleDecrypt: function(e) {
 			// NOTE: You can use the crypto module's createBuffer method to create a buffer with the blob
 			// returned from Ti.Utils.base64decode
-			var buffer = App.crypto.createBuffer({ value: Ti.Utils.base64decode(API.cipherTextField.value) });
+			var buffer = App.crypto.createBuffer({ base64Value: API.cipherTextField.value });
 			
 			// For this example, use the same buffer for both input and output (in-place)
 			// You can specify separate buffers for both input and output if desired

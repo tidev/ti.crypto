@@ -6,6 +6,8 @@
  */
 
 #import "TiCryptoUtils.h"
+#import "TiBuffer.h"
+#import "Base64Transcoder.h"
 
 
 @implementation TiCryptoUtils
@@ -30,6 +32,44 @@
 	}
 	
 	return data;
+}
+
++(NSString*)base64encode:(TiBuffer*)buffer
+{
+	NSString *str = nil;
+	const char *data = [[buffer data] bytes];
+	size_t len = [[buffer data] length];
+	
+	size_t outsize = EstimateBas64EncodedDataSize(len);
+	char *base64Result = malloc(sizeof(char)*outsize);
+    size_t theResultLength = outsize;
+	
+    bool result = Base64EncodeData(data, len, base64Result, &theResultLength);
+	if (result)	{
+		str = [[[NSString alloc] initWithBytes:base64Result length:theResultLength encoding:NSUTF8StringEncoding] autorelease];
+	}    
+	free(base64Result);
+	
+	return str;
+}
+
++(NSMutableData*)base64decode:(NSString*)str
+{
+	NSMutableData *theData = nil;
+	const char *data = [str UTF8String];
+	size_t len = [str length];
+	
+	size_t outsize = EstimateBas64DecodedDataSize(len);
+	char *base64Result = malloc(sizeof(char)*outsize);
+    size_t theResultLength = outsize;
+	
+    bool result = Base64DecodeData(data, len, base64Result, &theResultLength);
+	if (result) {
+		theData = [NSMutableData dataWithBytes:base64Result length:theResultLength];
+	}    
+	free(base64Result);
+	
+	return theData;
 }
 
 @end

@@ -1,5 +1,5 @@
 App.UI = (function() {
-	var cryptos = [
+	var algorithms = [
 		{ title: 'AES-128', subTitle: '128-bit key',  keySize: App.crypto.KEYSIZE_AES128,  algorithm: App.crypto.ALGORITHM_AES128, options: App.crypto.OPTION_PKCS7PADDING },
 		{ title: 'AES-128', subTitle: '192-bit key',  keySize: App.crypto.KEYSIZE_AES192,  algorithm: App.crypto.ALGORITHM_AES128, options: App.crypto.OPTION_PKCS7PADDING },
 		{ title: 'AES-128', subTitle: '256-bit key',  keySize: App.crypto.KEYSIZE_AES256,  algorithm: App.crypto.ALGORITHM_AES128, options: App.crypto.OPTION_PKCS7PADDING },
@@ -13,6 +13,7 @@ App.UI = (function() {
 		{ title: 'RC2',     subTitle: '1024-bit key', keySize: App.crypto.KEYSIZE_MAXRC2,  algorithm: App.crypto.ALGORITHM_RC2,    options: App.crypto.OPTION_PKCS7PADDING }
 	];
 	
+	// Currently selected crypto algorithm index
 	var selectedIndex = 0;
 
 	function createAppWindow() {
@@ -38,11 +39,11 @@ App.UI = (function() {
 		
 	function createCryptoTableView() {
 		var tableView = Ti.UI.createTableView({});
-		var cnt = cryptos.length;
+		var cnt = algorithms.length;
 		for (var index = 0; index < cnt; index++) {
 			row = Ti.UI.createTableViewRow({ height: 'auto', layout: 'vertical', hasChild: true });
-			row.add(Ti.UI.createLabel({ text: cryptos[index].title, top: 0, left: 4, height: 'auto', width: 'auto', font: { fontSize:16, fontWeight: 'bold' } }));
-			row.add(Ti.UI.createLabel({ text: cryptos[index].subTitle, top:0, left:4, height: 'auto', width: 'auto', font: { fontSize:12 } }));
+			row.add(Ti.UI.createLabel({ text: algorithms[index].title, top: 0, left: 4, height: 'auto', width: 'auto', font: { fontSize:16, fontWeight: 'bold' } }));
+			row.add(Ti.UI.createLabel({ text: algorithms[index].subTitle, top:0, left:4, height: 'auto', width: 'auto', font: { fontSize:12 } }));
 			tableView.appendRow(row);
 		}
 		tableView.addEventListener('click', openSelectionWindow);
@@ -56,29 +57,23 @@ App.UI = (function() {
 			backgroundColor: 'white',
 			tabBarHidden: true
 		});
-		
 		var data = [
 			{ title: 'Single call',    hasChild: true },
 			{ title: 'Multiple calls', hasChild: true }
 		];
-		
 		var tableView = Ti.UI.createTableView({
 			data: data
 		});
-		
 		tableView.addEventListener('click', function(e) {
-			switch (e.index) {
-				case 0:
-					openDemoWindow('cryptoSingle');
-					break;
-				case 1:
-					openDemoWindow('cryptoMultiple');
-					break;
+			if (e.index == 0) {
+				openDemoWindow('cryptoSingle');
+			} else if (e.index == 1) {
+				openDemoWindow('cryptoMultiple');
 			}
 		});
-		
 		win.add(tableView);
 		
+		// Save the currently selected algorithm index
 		selectedIndex = e.index;
 		
 		App.UI.tab.open(win, { animated: true });
@@ -94,7 +89,7 @@ App.UI = (function() {
 		
 		demoWindow.addEventListener('close', demo.cleanup);
 		
-		demo.init(cryptos[selectedIndex]);
+		demo.init(algorithms[selectedIndex]);
 		
 		demo.create(demoWindow);
 
@@ -105,6 +100,5 @@ App.UI = (function() {
 		createAppWindow: createAppWindow
 	};
 })();
-
 
 App.UI.createAppWindow().open();
