@@ -5,15 +5,9 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import "TiModule.h"
-#import <CommonCrypto/CommonCryptor.h>
-
-enum {
-	kCCError = -1
-};
-
-@interface TiCryptoModule : TiModule 
-{
+@interface TiCryptoUtils : NSObject {
 }
+
++(NSMutableData*)convertFromHex:(NSString*)value;
 
 @end

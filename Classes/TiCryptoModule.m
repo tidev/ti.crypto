@@ -1,10 +1,12 @@
 /**
- * Your Copyright Here
- *
- * Appcelerator Titanium is Copyright (c) 2009-2010 by Appcelerator, Inc.
- * and licensed under the Apache Public License (version 2)
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2011 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
+
 #import "TiCryptoModule.h"
+#import "TiCryptoUtils.h"
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
@@ -63,7 +65,38 @@
 	[super didReceiveMemoryWarning:notification];
 }
 
-#pragma mark Encryption
+#pragma mark Public Methods
+
+-(TiBuffer*)createBuffer:(id)args
+{
+	ENSURE_SINGLE_ARG(args,NSDictionary);
+	
+	NSMutableData* data;
+	
+	id value = [args objectForKey:@"value"];
+	if (value != nil) {
+		if ([value isKindOfClass:[NSString class]]) {
+			data = [[[NSMutableData alloc] initWithBytes:[value UTF8String] length:[value length]] autorelease];
+		} else if ([value isKindOfClass:[TiBlob class]]) {
+			data = [[[NSMutableData alloc] initWithData:[value data]] autorelease];
+		} else {
+			THROW_INVALID_ARG(@"invalid type");
+		}
+	} else {
+		value = [args objectForKey:@"hexValue"];
+		if (value != nil) {
+			ENSURE_TYPE(value,NSString);
+			data = [TiCryptoUtils convertFromHex:value];
+		}
+	}
+	
+    TiBuffer* dataBuffer = [[[TiBuffer alloc] _initWithPageContext:[self executionContext]] autorelease];
+	dataBuffer.data = data;	
+	
+	return dataBuffer;
+}
+
+#pragma mark Constants
 
 MAKE_SYSTEM_PROP(STATUS_SUCCESS,kCCSuccess)
 MAKE_SYSTEM_PROP(STATUS_ERROR,kCCError)
@@ -105,38 +138,5 @@ MAKE_SYSTEM_PROP(BLOCKSIZE_3DES,kCCBlockSize3DES)
 MAKE_SYSTEM_PROP(BLOCKSIZE_CAST,kCCBlockSizeCAST)
 MAKE_SYSTEM_PROP(BLOCKSIZE_RC2,kCCBlockSizeRC2)
 
--(TiBuffer*)createBuffer:(id)args
-{
-	ENSURE_SINGLE_ARG(args,NSDictionary);
-	
-	NSMutableData* data;
-	NSString* value;	
-	
-	ENSURE_ARG_OR_NIL_FOR_KEY(value,args,@"value",NSString);
-	if (value != nil) {
-		data = [[NSMutableData alloc] initWithBytes:[value UTF8String] length:[value length]];
-	} else {	
-		ENSURE_ARG_OR_NIL_FOR_KEY(value,args,@"hexValue",NSString);
-		if (value != nil) {
-			data = [[NSMutableData alloc] init];
-			
-			// Format of input string must be hex values separated by a space (e.g. "21 53 02")
-			NSScanner *scanner = [[NSScanner alloc] initWithString:value];
-			unsigned hexValue;
-			while([scanner scanHexInt:&hexValue]) {
-				unsigned char val = hexValue & 0xFF;
-				[data appendBytes:&val length:1];
-			}
-		}
-	}
-	
-    TiBuffer* dataBuffer = [[[TiBuffer alloc] _initWithPageContext:[self executionContext]] autorelease];
-	[dataBuffer setData:data];
-	[data release];
-	
-	NSLog(@"HEX BUFFER SET: %d bytes %@", [[dataBuffer data] length], [dataBuffer data]);
-	
-	return dataBuffer;
-}
 
 @end

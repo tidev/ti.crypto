@@ -6,6 +6,7 @@
  */
 
 #import "TiCryptoKeyProxy.h"
+#import "TiCryptoUtils.h"
 
 #import "TiUtils.h"
 
@@ -13,16 +14,13 @@
 
 -(void)secureRelease
 {
-	NSLog(@"KEY: SECURE RELEASE");
-	
 	[data resetBytesInRange:NSMakeRange(0, [data length])];
 	RELEASE_TO_NIL(data);
 }
 
 -(void)_destroy
 {	
-	[self secureRelease];
-	
+	[self secureRelease];	
 	[super _destroy];
 }
 
@@ -32,28 +30,16 @@
 	
 	[self secureRelease];
 	
-	data = [[NSData alloc] initWithBytes:[value UTF8String] length:[value length]];
-
-	NSLog(@"STRING KEY SET: %d bytes %@", [data length], data);
+	data = [[NSMutableData alloc] initWithBytes:[value UTF8String] length:[value length]];
 }
 
 -(void)setHexValue:(id)value
 {
 	ENSURE_TYPE(value,NSString);
 	
-	[self secureRelease];
+	[self secureRelease];	
 	
-	data = [[NSMutableData alloc] init];
-	
-	// Format of input string must be hex values separated by a space (e.g. "21 53 02")
-	NSScanner *scanner = [[NSScanner alloc] initWithString:value];
-	unsigned hexValue;
-	while([scanner scanHexInt:&hexValue]) {
-		unsigned char val = hexValue & 0xFF;
-		[data appendBytes:&val length:1];
-	}
-	
-	NSLog(@"HEX KEY SET: %d bytes %@", [data length], data);
+	data = [[TiCryptoUtils convertFromHex:value] retain];
 }
 
 -(const void *)key
@@ -64,6 +50,11 @@
 -(size_t)length
 {
 	return [data length];
+}
+
+-(NSMutableData*)data
+{
+	return data;
 }
 
 @end

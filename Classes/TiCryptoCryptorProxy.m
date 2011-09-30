@@ -77,9 +77,11 @@ typedef struct {
 	ENSURE_TYPE(cryptOptions->key,TiCryptoKeyProxy);
 	
 	// Retrieve the initialization vector -- it must be a buffer object (preferably created
-	// from ti.crypto.createBuffer sot hat it supports binary vector data
+	// from ti.crypto.createBuffer so that it supports binary vector data
 	cryptOptions->initializationVector = [self valueForUndefinedKey:@"initializationVector"];
-	ENSURE_TYPE(cryptOptions->initializationVector,TiBuffer);
+	if (cryptOptions->initializationVector) {
+		ENSURE_TYPE(cryptOptions->initializationVector,TiBuffer);
+	}
 }
 
 #pragma mark Cryptographic Context Methods
@@ -324,7 +326,7 @@ typedef struct {
 				neededLength += kCCBlockSizeAES128;
 				break;
 			case kCCAlgorithmDES:
-				neededLength += kCCBlockSizeDES;
+				neededLength += kCCBlockSizeDES*2;
 				break;
 			case kCCAlgorithm3DES:
 				neededLength += kCCBlockSize3DES;
@@ -343,6 +345,15 @@ typedef struct {
 			[cryptData.dataOutBuffer setLength:NUMINT(neededLength)];
 		}
 	}
+	
+	//NSLog(@"Preparing to crypt");
+	//NSLog(@"Input length: %d value: %@", cryptData.dataInLength, [cryptData.dataInBuffer data]);
+	//NSLog(@"Output length: %d", cryptData.dataOutLength);
+	//NSLog(@"Operation: %d",cryptOptions.operation);
+	//NSLog(@"Algorithm: %d",cryptOptions.algorithm);
+	//NSLog(@"Options: %d",cryptOptions.options);
+	//NSLog(@"Key: %@", [cryptOptions.key data]);
+	//NSLog(@"InitializationVector: %@",[cryptOptions.initializationVector data]);
 	
 	size_t numBytesMoved = 0;
 	CCCryptorStatus result = CCCrypt(operation,
