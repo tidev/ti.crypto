@@ -82,8 +82,6 @@ typedef struct {
 	}
 }
 
-#pragma mark Cryptographic Context Methods
-
 -(void)prepareCryptData:(CryptData*)cryptData fromArgs:(id)args
 {
 	enum {
@@ -142,6 +140,8 @@ typedef struct {
 		cryptData->dataOutLength = [cryptData->dataOutBuffer length].intValue;
 	}
 }
+
+#pragma mark Cryptographic Context Methods
 
 -(CCCryptorRef)cryptor
 {

@@ -86,7 +86,7 @@ static NSDictionary* dataTypeMap = nil;
     return [[dataTypeMap valueForKey:type] intValue];
 }
 
--(id)decodeData:(id)args
+-(NSString*)decodeData:(id)args
 {
 	ENSURE_SINGLE_ARG(args,NSDictionary);
 	
