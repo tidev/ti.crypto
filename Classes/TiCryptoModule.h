@@ -12,6 +12,16 @@ enum {
 	kCCError = -1
 };
 
+typedef enum {
+	kDataTypeBlob = 0,
+	kDataTypeHexString = 1,
+	kDataTypeBase64String = 2
+} cryptoDataType;
+
+extern NSString * const kDataTypeBlobName;
+extern NSString * const kDataTypeHexStringName;
+extern NSString * const kDataTypeBase64StringName;
+
 @interface TiCryptoModule : TiModule 
 {
 }

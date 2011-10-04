@@ -2,7 +2,7 @@
 
 ## Description
 
-TODO: Enter your module description here
+This module provides access to the CCCrypt symmetric encryption interfaces on iOS.
 
 ## Accessing the crypto Module
 
@@ -14,26 +14,24 @@ The crypto variable is a reference to the Module object.
 
 ## Reference
 
-TODO: If your module has an API, you should document
-the reference here.
+Use the following link(s) to learn more about using the crypto APIs:
 
-### ___PROJECTNAMEASIDENTIFIER__.function
+* [iOS Developer Library - Mac OS X Manual Page for CCCrypt(3cc)](http://developer.apple.com/library/ios/#documentation/System/Conceptual/ManPages_iPhoneOS/man3/CCCrypt.3cc.html)
 
-TODO: This is an example of a module function.
+## Methods
 
-### ___PROJECTNAMEASIDENTIFIER__.property
+## Properties
 
-TODO: This is an example of a module property.
+## Constants
 
 ## Usage
-
-TODO: Enter your usage example here
+See example.
 
 ## Author
+Jeff English
 
-TODO: Enter your author name, email and other contact
-details you want to share here. 
+## Feedback and Support
+Please direct all questions, feedback, and concerns to [info@appcelerator.com](mailto:info@appcelerator.com?subject=iOS%20Crypto%20Module).
 
 ## License
-
-TODO: Enter your license/legal information here.
+Copyright(c) 2010-2011 by Appcelerator, Inc. All Rights Reserved. Please see the LICENSE file included in the distribution for further details.

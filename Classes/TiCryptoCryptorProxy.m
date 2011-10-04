@@ -7,7 +7,6 @@
 
 #import "TiCryptoModule.h"
 #import "TiCryptoCryptorProxy.h"
-#import "TiCryptoKeyProxy.h"
 
 #import "TiUtils.h"
 
@@ -53,7 +52,7 @@ typedef struct {
 	CCOperation operation;
 	CCAlgorithm algorithm;
 	CCOptions options;
-	TiCryptoKeyProxy* key;
+	TiBuffer* key;
 	TiBuffer* initializationVector;
 } CryptOptions;
 
@@ -71,10 +70,9 @@ typedef struct {
 	cryptOptions->algorithm = [TiUtils intValue:[self valueForUndefinedKey:@"algorithm"] def:kCCAlgorithmAES128];
 	cryptOptions->options = [TiUtils intValue:[self valueForUndefinedKey:@"options"] def:0];
 	
-	// Retrieve the key -- it must be a TiCryptoKeyProxy object to support binary
-	// key data as well as secure cleanup.
+	// Retrieve the key
 	cryptOptions->key = [self valueForUndefinedKey:@"key"];
-	ENSURE_TYPE(cryptOptions->key,TiCryptoKeyProxy);
+	ENSURE_TYPE(cryptOptions->key,TiBuffer);
 	
 	// Retrieve the initialization vector -- it must be a buffer object (preferably created
 	// from ti.crypto.createBuffer so that it supports binary vector data
@@ -155,8 +153,8 @@ typedef struct {
 		CCCryptorStatus result = CCCryptorCreate(cryptOptions.operation, 
 												 cryptOptions.algorithm,
 												 cryptOptions.options,
-												 [cryptOptions.key key],
-												 [cryptOptions.key length],
+												 [[cryptOptions.key data] bytes],
+												 [cryptOptions.key length].intValue,
 												 [[cryptOptions.initializationVector data] bytes],
 												 &cryptorRef);
 		
@@ -359,8 +357,8 @@ typedef struct {
 	CCCryptorStatus result = CCCrypt(operation,
 									 cryptOptions.algorithm,
 									 cryptOptions.options,
-									 [cryptOptions.key key],
-									 [cryptOptions.key length],
+									 [[cryptOptions.key data] bytes],
+									 [cryptOptions.key length].intValue,
 									 [[cryptOptions.initializationVector data] bytes],
 									 [[cryptData.dataInBuffer data] bytes],
 									 (size_t)cryptData.dataInLength,
@@ -372,6 +370,7 @@ typedef struct {
 		if (resizeBuffer) {
 			[cryptData.dataOutBuffer setLength:NUMINT(numBytesMoved)];
 		}
+		//NSLog(@"DataOut: %@", [cryptData.dataOutBuffer data]);
 	} else {
 		NSLog(@"[ERROR] Error during crypt operation - %d", result);
 	}

@@ -9,8 +9,22 @@
 #import "TiBuffer.h"
 #import "Base64Transcoder.h"
 
-
 @implementation TiCryptoUtils
+
++(NSString*)convertToHex:(TiBuffer*)buffer
+{
+	const char *data = [[buffer data] bytes];
+	size_t len = [[buffer data] length];
+	
+	NSMutableString* encoded = [[NSMutableString alloc] initWithCapacity:len*2];
+	for (int i=0; i < len; i++) {
+		[encoded appendFormat:@"%02x",data[i]];
+	}
+	NSString* value = [encoded lowercaseString];
+	[encoded release];
+								
+	return value;
+}
 
 +(NSMutableData*)convertFromHex:(NSString*)value
 {

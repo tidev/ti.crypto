@@ -7,6 +7,7 @@
 
 #import "TiCryptoModule.h"
 #import "TiCryptoUtils.h"
+
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
@@ -67,46 +68,111 @@
 
 #pragma mark Public Methods
 
--(TiBuffer*)createBuffer:(id)args
+NSString * const kDataTypeBlobName = @"blob";
+NSString * const kDataTypeHexStringName = @"hexstring";
+NSString * const kDataTypeBase64StringName = @"base64string";
+
+static NSDictionary* dataTypeMap = nil;
+
++(cryptoDataType)constantToDataType:(NSString*)type
+{
+    if (dataTypeMap == nil) {
+        dataTypeMap = [[NSDictionary alloc] initWithObjectsAndKeys:
+					   NUMINT(kDataTypeBlob),kDataTypeBlobName,
+					   NUMINT(kDataTypeHexString),kDataTypeHexStringName,
+					   NUMINT(kDataTypeBase64String),kDataTypeBase64StringName,
+					   nil];
+    }
+    return [[dataTypeMap valueForKey:type] intValue];
+}
+
+-(id)decodeData:(id)args
 {
 	ENSURE_SINGLE_ARG(args,NSDictionary);
 	
-	NSMutableData* data;
+	NSString* type;
+	TiBuffer* source;
+	id result = nil;
 	
-	id value = [args objectForKey:@"value"];
-	if (value != nil) {
-		if ([value isKindOfClass:[NSString class]]) {
-			data = [[[NSMutableData alloc] initWithBytes:[value UTF8String] length:[value length]] autorelease];
-		} else if ([value isKindOfClass:[TiBlob class]]) {
-			data = [[[NSMutableData alloc] initWithData:[value data]] autorelease];
-		} else {
-			THROW_INVALID_ARG(@"invalid type");
-		}
-	} else {
-		value = [args objectForKey:@"hexValue"];
-		if (value != nil) {
-			ENSURE_TYPE(value,NSString);
-			data = [TiCryptoUtils convertFromHex:value];
-		} else {
-			value = [args objectForKey:@"base64Value"];
-			if (value != nil) {
-				ENSURE_TYPE(value,NSString);
-				data = [TiCryptoUtils base64decode:value];
-			}
-		}
+	ENSURE_ARG_FOR_KEY(type, args, @"type", NSString);
+	ENSURE_ARG_FOR_KEY(source, args, @"source", TiBuffer);
+	
+	switch ([TiCryptoModule constantToDataType:type]) {
+		case kDataTypeBase64String:
+			result = [TiCryptoUtils base64encode:source];
+			break;
+		case kDataTypeHexString:
+			result = [TiCryptoUtils convertToHex:source];
+			break;
+		default:
+			[self throwException:[NSString stringWithFormat:@"Invalid type identifier '%@'",type]
+					   subreason:nil
+						location:CODELOCATION];
+			break;
 	}
 	
-    TiBuffer* dataBuffer = [[[TiBuffer alloc] _initWithPageContext:[self executionContext]] autorelease];
-	dataBuffer.data = data;	
-	
-	return dataBuffer;
+	return result;
 }
 
--(NSString*)base64encode:(id)args
+-(NSNumber*)encodeData:(id)args
 {
-	ENSURE_SINGLE_ARG(args,TiBuffer);
+	ENSURE_SINGLE_ARG(args,NSDictionary);
 	
-	return [TiCryptoUtils base64encode:args];
+	NSString* type;
+	id source;
+	TiBuffer* dest = nil;
+	int destPosition;
+	BOOL hasDestPosition;
+	NSData *data;
+	
+	ENSURE_ARG_FOR_KEY(type, args, @"type", NSString);
+	ENSURE_ARG_FOR_KEY(source, args, @"source", NSObject);
+	ENSURE_ARG_FOR_KEY(dest, args, @"dest", TiBuffer);
+	ENSURE_INT_OR_NIL_FOR_KEY(destPosition, args, @"destPosition", hasDestPosition);
+	
+	destPosition = (hasDestPosition) ? destPosition : 0;
+	
+	switch ([TiCryptoModule constantToDataType:type]) {
+		case kDataTypeBlob:
+			ENSURE_TYPE(source,TiBlob);
+			data = [source data];
+			break;
+		case kDataTypeHexString:
+			ENSURE_TYPE(source,NSString);
+			data = [TiCryptoUtils convertFromHex:source];
+			break;
+		case kDataTypeBase64String:
+			ENSURE_TYPE(source,NSString);
+			data = [TiCryptoUtils base64decode:source];
+			break;
+		default:
+			[self throwException:[NSString stringWithFormat:@"Invalid type identifier '%@'",type]
+					   subreason:nil
+						location:CODELOCATION];
+			break;
+	}
+	
+	// Verify that the offset is within range
+	int destLength = [[dest data] length];
+	if (destPosition >= destLength) {
+		NSLog(@"[ERROR] Destination position of %d is past end of buffer. Buffer size is %d.", destPosition, destLength);
+        return NUMINT(BAD_DEST_OFFSET);
+    }
+
+	// Verify that the destination can hold the result
+	int srcLength = [data length];
+	int neededLength = destPosition + srcLength;
+	if (neededLength > destLength) {
+		NSLog(@"[ERROR] Destination buffer size of %d is too small. Needed %d.", destLength, neededLength);
+		return NUMINT(TOO_SMALL);
+	}
+	
+	void* bufferBytes = [[dest data] mutableBytes];
+	const void* srcBytes = [data bytes];
+	
+	memcpy(bufferBytes + destPosition, srcBytes, srcLength);
+	
+	return NUMINT(destPosition + srcLength);
 }
 
 #pragma mark Constants
@@ -151,5 +217,8 @@ MAKE_SYSTEM_PROP(BLOCKSIZE_3DES,kCCBlockSize3DES)
 MAKE_SYSTEM_PROP(BLOCKSIZE_CAST,kCCBlockSizeCAST)
 MAKE_SYSTEM_PROP(BLOCKSIZE_RC2,kCCBlockSizeRC2)
 
+MAKE_SYSTEM_STR(TYPE_BLOB,kDataTypeBlobName)
+MAKE_SYSTEM_STR(TYPE_HEXSTRING,kDataTypeHexStringName)
+MAKE_SYSTEM_STR(TYPE_BASE64STRING,kDataTypeBase64StringName)
 
 @end

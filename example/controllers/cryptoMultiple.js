@@ -42,40 +42,62 @@ App.controllers.cryptoMultiple = function () {
 		init: function (params) {
 			API.params = params;
 
+			// Create a buffer of the specified size to hold the encryption/decryption key
+			API.key = Ti.createBuffer({ length: params.keySize });
+
 			// For this example, create a key to use based on the key size for the selected algorithm
 			// Keys can be defined using text strings ('value:') or hex values ('hexValue:')
 			switch (params.keySize) {
 				case 1:
-					API.key = App.crypto.createKey({ hexValue: '11' });
+					App.crypto.encodeData({
+						source: '11',
+						dest: API.key,
+						type: App.crypto.TYPE_HEXSTRING
+					});
 					break;
 				case 5:
 					// Hex values can be separated by spaces for easier reading
-					API.key = App.crypto.createKey({ hexValue: '00 11 22 33 44' });
+				    App.crypto.encodeData({
+						source: '00 11 22 33 44',
+						dest: API.key,
+						type: App.crypto.TYPE_HEXSTRING
+					});
 					break;
 				case 8:
 					// Or, hex values can be specified as one single sequence of numbers
-					API.key = App.crypto.createKey({ hexValue: '0011223344556677' });
+					App.crypto.encodeData({
+						source: '0011223344556677',
+						dest: API.key,
+						type: App.crypto.TYPE_HEXSTRING
+					});
 					break;
 				case 16:
-					API.key = App.crypto.createKey({ hexValue: '001122334455667788990a0b0c0d0e0f' });
+					App.crypto.encodeData({
+						source: '001122334455667788990a0b0c0d0e0f',
+						dest: API.key,
+						type: App.crypto.TYPE_HEXSTRING
+					});
 					break;
 				case 24:
-					API.key = App.crypto.createKey({ value: 'abcdefghijklmnopqrstuvwx' });
+					API.key.value = 'abcdefghijklmnopqrstuvwx';
 					break;
 				case 32:
-					API.key = App.crypto.createKey({ value: 'abcdefghijklmnopqrstuvwxyz012345' });
+					API.key.value = 'abcdefghijklmnopqrstuvwxyz012345';
 					break;
 				case 128:
-					API.key = App.crypto.createKey({ value: '00000000001111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000111111111122222222' });
+					API.key.value = '00000000001111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000111111111122222222';
 					break;
 				case 512:
 					var string100 = '0000000000111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999';
-					API.key = App.crypto.createKey({ value: string100 + string100 + string100 + string100 + string100 + '012345678901' });
+					API.key.value = string100 + string100 + string100 + string100 + string100 + '012345678901';
 					break;
 			};
 			
-			API.initializationVector = App.crypto.createBuffer({
-				hexValue: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff"
+			API.initializationVector = Ti.createBuffer({ length: 16 });
+			var length = App.crypto.encodeData({
+				source: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff",
+				dest: API.initializationVector,
+				type: App.crypto.TYPE_HEXSTRING
 			});
 			
 			API.cryptor = App.crypto.createCryptor({
@@ -86,8 +108,7 @@ App.controllers.cryptoMultiple = function () {
 			});
 			
 			// Create a fixed size buffer to be used for encryption
-			API.fixedBuffer = Ti.createBuffer();
-			API.fixedBuffer.length = 1024;
+			API.fixedBuffer = Ti.createBuffer({ length: 1024 });
 			
 			// Create the encryption buffer to hold the result
 			API.encryptionBuffer = Ti.createBuffer();			
@@ -116,7 +137,7 @@ App.controllers.cryptoMultiple = function () {
 			API.cryptor.resizeBuffer = false;
 			
 			// Create the buffer containing the original plain text that we want to encrypt
-			var buffer = App.crypto.createBuffer({ value: API.plainTextField.value + '\n' });
+			var buffer = Ti.createBuffer({ value: API.plainTextField.value + '\n' });
 			
 			// For this example, use the same buffer for both input and output (in-place)
 			// You can specify separate buffers for both input and output if desired
@@ -129,7 +150,10 @@ App.controllers.cryptoMultiple = function () {
 				alert('Error occurred during encryption: ' + numBytes);
 			} else {
 				// Set the value of the encrypted text (base64 encoded for readability)
-				API.cipherTextField.value = App.crypto.base64encode(API.encryptionBuffer);
+				API.cipherTextField.value = App.crypto.decodeData({
+					source: API.encryptionBuffer,
+					type: App.crypto.TYPE_BASE64STRING
+				});
 			}
 			
 			// Clear the plain text field for the next update
@@ -146,7 +170,10 @@ App.controllers.cryptoMultiple = function () {
 				// Append the result to our encryption buffer
 				API.encryptionBuffer.append(API.fixedBuffer, 0, numBytes);
 				
-				API.cipherTextField.value = App.crypto.base64encode(API.encryptionBuffer);
+				API.cipherTextField.value = App.crypto.decodeData({
+					source: API.encryptionBuffer,
+					type: App.crypto.TYPE_BASE64STRING
+				});
 			}
 			
 			// We are done with this cryptor operation -- release it so it can be reused
