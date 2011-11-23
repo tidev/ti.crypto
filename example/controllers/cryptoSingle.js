@@ -33,33 +33,33 @@ App.controllers.cryptoSingle = function () {
 			// Keys can be defined using text strings ('value:') or hex values ('hexValue:')
 			switch (params.keySize) {
 				case 1:
-					App.crypto.encodeData({
+					Crypto.encodeData({
 						source: '11',
 						dest: API.key,
-						type: App.crypto.TYPE_HEXSTRING
+						type: Crypto.TYPE_HEXSTRING
 					});
 					break;
 				case 5:
 					// Hex values can be separated by spaces for easier reading
-				    App.crypto.encodeData({
+				    Crypto.encodeData({
 						source: '00 11 22 33 44',
 						dest: API.key,
-						type: App.crypto.TYPE_HEXSTRING
+						type: Crypto.TYPE_HEXSTRING
 					});
 					break;
 				case 8:
 					// Or, hex values can be specified as one single sequence of numbers
-					App.crypto.encodeData({
+					Crypto.encodeData({
 						source: '0011223344556677',
 						dest: API.key,
-						type: App.crypto.TYPE_HEXSTRING
+						type: Crypto.TYPE_HEXSTRING
 					});
 					break;
 				case 16:
-					App.crypto.encodeData({
+					Crypto.encodeData({
 						source: '001122334455667788990a0b0c0d0e0f',
 						dest: API.key,
-						type: App.crypto.TYPE_HEXSTRING
+						type: Crypto.TYPE_HEXSTRING
 					});
 					break;
 				case 24:
@@ -78,13 +78,13 @@ App.controllers.cryptoSingle = function () {
 			};
 			
 			API.initializationVector = Ti.createBuffer({ length: 16 });
-			var length = App.crypto.encodeData({
+			var length = Crypto.encodeData({
 				source: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff",
 				dest: API.initializationVector,
-				type: App.crypto.TYPE_HEXSTRING
+				type: Crypto.TYPE_HEXSTRING
 			});
 			
-			API.cryptor = App.crypto.createCryptor({
+			API.cryptor = Crypto.createCryptor({
 				algorithm: params.algorithm,
 				options: params.options,
 				key: API.key,
@@ -113,9 +113,9 @@ App.controllers.cryptoSingle = function () {
 				alert('Error occurred during encryption: ' + numBytes);
 			} else {
 				// Set the value of the encrypted text (base64 encoded for readability)
-				API.cipherTextField.value = App.crypto.decodeData({
+				API.cipherTextField.value = Crypto.decodeData({
 					source: buffer,
-					type: App.crypto.TYPE_BASE64STRING
+					type: Crypto.TYPE_BASE64STRING
 				});
 			}
 			
@@ -125,10 +125,10 @@ App.controllers.cryptoSingle = function () {
 		handleDecrypt: function(e) {
 			// Load the buffer with the base64encoded value from the encrypted text field
 			var buffer = Ti.createBuffer({ length: API.cipherTextField.value.length });
-			var length = App.crypto.encodeData({
+			var length = Crypto.encodeData({
 				source: API.cipherTextField.value,
 				dest: buffer,
-				type: App.crypto.TYPE_BASE64STRING
+				type: Crypto.TYPE_BASE64STRING
 			});		
 			if (length < 0) {
 				Ti.API.info('ERROR: Buffer too small');

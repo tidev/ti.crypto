@@ -49,33 +49,33 @@ App.controllers.cryptoMultiple = function () {
 			// Keys can be defined using text strings ('value:') or hex values ('hexValue:')
 			switch (params.keySize) {
 				case 1:
-					App.crypto.encodeData({
+					Crypto.encodeData({
 						source: '11',
 						dest: API.key,
-						type: App.crypto.TYPE_HEXSTRING
+						type: Crypto.TYPE_HEXSTRING
 					});
 					break;
 				case 5:
 					// Hex values can be separated by spaces for easier reading
-				    App.crypto.encodeData({
+				    Crypto.encodeData({
 						source: '00 11 22 33 44',
 						dest: API.key,
-						type: App.crypto.TYPE_HEXSTRING
+						type: Crypto.TYPE_HEXSTRING
 					});
 					break;
 				case 8:
 					// Or, hex values can be specified as one single sequence of numbers
-					App.crypto.encodeData({
+					Crypto.encodeData({
 						source: '0011223344556677',
 						dest: API.key,
-						type: App.crypto.TYPE_HEXSTRING
+						type: Crypto.TYPE_HEXSTRING
 					});
 					break;
 				case 16:
-					App.crypto.encodeData({
+					Crypto.encodeData({
 						source: '001122334455667788990a0b0c0d0e0f',
 						dest: API.key,
-						type: App.crypto.TYPE_HEXSTRING
+						type: Crypto.TYPE_HEXSTRING
 					});
 					break;
 				case 24:
@@ -94,13 +94,13 @@ App.controllers.cryptoMultiple = function () {
 			};
 			
 			API.initializationVector = Ti.createBuffer({ length: 16 });
-			var length = App.crypto.encodeData({
+			var length = Crypto.encodeData({
 				source: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff",
 				dest: API.initializationVector,
-				type: App.crypto.TYPE_HEXSTRING
+				type: Crypto.TYPE_HEXSTRING
 			});
 			
-			API.cryptor = App.crypto.createCryptor({
+			API.cryptor = Crypto.createCryptor({
 				algorithm: params.algorithm,
 				options: params.options,
 				key: API.key,
@@ -131,7 +131,7 @@ App.controllers.cryptoMultiple = function () {
 		},
 		
 		handleUpdate: function(e) {
-			API.cryptor.operation = App.crypto.ENCRYPT;
+			API.cryptor.operation = Crypto.ENCRYPT;
 			
 			// Make sure to set the resizeBuffer flag to false since the decryption operation may have changed its value
 			API.cryptor.resizeBuffer = false;
@@ -150,9 +150,9 @@ App.controllers.cryptoMultiple = function () {
 				alert('Error occurred during encryption: ' + numBytes);
 			} else {
 				// Set the value of the encrypted text (base64 encoded for readability)
-				API.cipherTextField.value = App.crypto.decodeData({
+				API.cipherTextField.value = Crypto.decodeData({
 					source: API.encryptionBuffer,
-					type: App.crypto.TYPE_BASE64STRING
+					type: Crypto.TYPE_BASE64STRING
 				});
 			}
 			
@@ -170,9 +170,9 @@ App.controllers.cryptoMultiple = function () {
 				// Append the result to our encryption buffer
 				API.encryptionBuffer.append(API.fixedBuffer, 0, numBytes);
 				
-				API.cipherTextField.value = App.crypto.decodeData({
+				API.cipherTextField.value = Crypto.decodeData({
 					source: API.encryptionBuffer,
-					type: App.crypto.TYPE_BASE64STRING
+					type: Crypto.TYPE_BASE64STRING
 				});
 			}
 			
@@ -189,7 +189,7 @@ App.controllers.cryptoMultiple = function () {
 		},
 		
 		doDecryption: function() {
-			API.cryptor.operation = App.crypto.DECRYPT;
+			API.cryptor.operation = Crypto.DECRYPT;
 			
 			// For this example, we want the decryption buffer to be auto-sized to hold the decrypted text
 			API.cryptor.resizeBuffer = true;

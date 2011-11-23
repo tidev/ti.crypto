@@ -1,16 +1,16 @@
 App.UI = (function() {
 	var algorithms = [
-		{ title: 'AES-128', subTitle: '128-bit key',  keySize: App.crypto.KEYSIZE_AES128,  algorithm: App.crypto.ALGORITHM_AES128, options: App.crypto.OPTION_PKCS7PADDING },
-		{ title: 'AES-128', subTitle: '192-bit key',  keySize: App.crypto.KEYSIZE_AES192,  algorithm: App.crypto.ALGORITHM_AES128, options: App.crypto.OPTION_PKCS7PADDING },
-		{ title: 'AES-128', subTitle: '256-bit key',  keySize: App.crypto.KEYSIZE_AES256,  algorithm: App.crypto.ALGORITHM_AES128, options: App.crypto.OPTION_PKCS7PADDING },
-		{ title: 'DES',     subTitle: '64-bit key',   keySize: App.crypto.KEYSIZE_DES,     algorithm: App.crypto.ALGORITHM_DES,    options: App.crypto.OPTION_PKCS7PADDING },
-		{ title: '3DES',    subTitle: '192-bit key',  keySize: App.crypto.KEYSIZE_3DES,    algorithm: App.crypto.ALGORITHM_3DES,   options: App.crypto.OPTION_PKCS7PADDING },
-		{ title: 'CAST',    subTitle: '40-bit key',   keySize: App.crypto.KEYSIZE_MINCAST, algorithm: App.crypto.ALGORITHM_CAST,   options: App.crypto.OPTION_PKCS7PADDING },
-		{ title: 'CAST',    subTitle: '128-bit key',  keySize: App.crypto.KEYSIZE_MAXCAST, algorithm: App.crypto.ALGORITHM_CAST,   options: App.crypto.OPTION_PKCS7PADDING },
-		{ title: 'RC4',     subTitle: '8-bit key',    keySize: App.crypto.KEYSIZE_MINRC4,  algorithm: App.crypto.ALGORITHM_RC4,    options: 0 },
-		{ title: 'RC4',     subTitle: '4096-bit key', keySize: App.crypto.KEYSIZE_MAXRC4,  algorithm: App.crypto.ALGORITHM_RC4,    options: 0 },
-		{ title: 'RC2',     subTitle: '8-bit key',    keySize: App.crypto.KEYSIZE_MINRC2,  algorithm: App.crypto.ALGORITHM_RC2,    options: App.crypto.OPTION_PKCS7PADDING },
-		{ title: 'RC2',     subTitle: '1024-bit key', keySize: App.crypto.KEYSIZE_MAXRC2,  algorithm: App.crypto.ALGORITHM_RC2,    options: App.crypto.OPTION_PKCS7PADDING }
+		{ title: 'AES-128', subTitle: '128-bit key',  keySize: Crypto.KEYSIZE_AES128,  algorithm: Crypto.ALGORITHM_AES128, options: Crypto.OPTION_PKCS7PADDING },
+		{ title: 'AES-128', subTitle: '192-bit key',  keySize: Crypto.KEYSIZE_AES192,  algorithm: Crypto.ALGORITHM_AES128, options: Crypto.OPTION_PKCS7PADDING },
+		{ title: 'AES-128', subTitle: '256-bit key',  keySize: Crypto.KEYSIZE_AES256,  algorithm: Crypto.ALGORITHM_AES128, options: Crypto.OPTION_PKCS7PADDING },
+		{ title: 'DES',     subTitle: '64-bit key',   keySize: Crypto.KEYSIZE_DES,     algorithm: Crypto.ALGORITHM_DES,    options: Crypto.OPTION_PKCS7PADDING },
+		{ title: '3DES',    subTitle: '192-bit key',  keySize: Crypto.KEYSIZE_3DES,    algorithm: Crypto.ALGORITHM_3DES,   options: Crypto.OPTION_PKCS7PADDING },
+		{ title: 'CAST',    subTitle: '40-bit key',   keySize: Crypto.KEYSIZE_MINCAST, algorithm: Crypto.ALGORITHM_CAST,   options: Crypto.OPTION_PKCS7PADDING },
+		{ title: 'CAST',    subTitle: '128-bit key',  keySize: Crypto.KEYSIZE_MAXCAST, algorithm: Crypto.ALGORITHM_CAST,   options: Crypto.OPTION_PKCS7PADDING },
+		{ title: 'RC4',     subTitle: '8-bit key',    keySize: Crypto.KEYSIZE_MINRC4,  algorithm: Crypto.ALGORITHM_RC4,    options: 0 },
+		{ title: 'RC4',     subTitle: '4096-bit key', keySize: Crypto.KEYSIZE_MAXRC4,  algorithm: Crypto.ALGORITHM_RC4,    options: 0 },
+		{ title: 'RC2',     subTitle: '8-bit key',    keySize: Crypto.KEYSIZE_MINRC2,  algorithm: Crypto.ALGORITHM_RC2,    options: Crypto.OPTION_PKCS7PADDING },
+		{ title: 'RC2',     subTitle: '1024-bit key', keySize: Crypto.KEYSIZE_MAXRC2,  algorithm: Crypto.ALGORITHM_RC2,    options: Crypto.OPTION_PKCS7PADDING }
 	];
 	
 	// Currently selected crypto algorithm index
