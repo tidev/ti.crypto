@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.0
+version: 2.0
 description: Symmetric Encryption 
 author: Jeff English
 license: Appcelerator Commercial License
@@ -14,4 +14,4 @@ name: crypto
 moduleid: ti.crypto
 guid: 5041eaca-a895-4229-a44b-de2f582c9133
 platform: android
-minsdk: 1.7.2
+minsdk: 1.8.0.1
