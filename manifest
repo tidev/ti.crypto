@@ -3,7 +3,8 @@
 # during compilation, packaging, distribution, etc.
 #
 version: 2.0
-description: Symmetric Encryption 
+module.apiversion: 2
+description: Symmetric Encryption
 author: Jeff English
 license: Appcelerator Commercial License
 copyright: Copyright (c) 2010-2011 by Appcelerator, Inc.
