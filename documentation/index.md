@@ -6,7 +6,7 @@ This module provides access to the CCCrypt symmetric encryption interfaces on iO
 
 ## Getting Started
 
-View the [Configuring Apps to Use Modules](https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules) page for instructions on getting
+View the [Using Titanium Modules](https://wiki.appcelerator.org/display/tis/Using+Titanium+Modules) document for instructions on getting
 started with using this module in your application.
 
 ## Accessing the crypto Module
