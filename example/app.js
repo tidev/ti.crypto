@@ -21,5 +21,6 @@ var App = {
 var Crypto = require('ti.crypto');
 
 Ti.include('ui.js');
+Ti.include('test.js');
 
 App.UI.createAppWindow().open();

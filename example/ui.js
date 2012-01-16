@@ -7,8 +7,8 @@ App.UI = (function () {
         { title: '3DES', subTitle: '192-bit key', keySize: Crypto.KEYSIZE_3DES, algorithm: Crypto.ALGORITHM_3DES, options: Crypto.OPTION_PKCS7PADDING },
         { title: 'CAST', subTitle: '40-bit key', keySize: Crypto.KEYSIZE_MINCAST, algorithm: Crypto.ALGORITHM_CAST, options: Crypto.OPTION_PKCS7PADDING },
         { title: 'CAST', subTitle: '128-bit key', keySize: Crypto.KEYSIZE_MAXCAST, algorithm: Crypto.ALGORITHM_CAST, options: Crypto.OPTION_PKCS7PADDING },
-        { title: 'RC4', subTitle: '8-bit key', keySize: Crypto.KEYSIZE_MINRC4, algorithm: Crypto.ALGORITHM_RC4, options: 0 },
-        { title: 'RC4', subTitle: '4096-bit key', keySize: Crypto.KEYSIZE_MAXRC4, algorithm: Crypto.ALGORITHM_RC4, options: 0 },
+        /*{ title: 'RC4', subTitle: '8-bit key', keySize: Crypto.KEYSIZE_MINRC4, algorithm: Crypto.ALGORITHM_RC4, options: 0 },
+        { title: 'RC4', subTitle: '4096-bit key', keySize: Crypto.KEYSIZE_MAXRC4, algorithm: Crypto.ALGORITHM_RC4, options: 0 },*/
         { title: 'RC2', subTitle: '8-bit key', keySize: Crypto.KEYSIZE_MINRC2, algorithm: Crypto.ALGORITHM_RC2, options: Crypto.OPTION_PKCS7PADDING },
         { title: 'RC2', subTitle: '1024-bit key', keySize: Crypto.KEYSIZE_MAXRC2, algorithm: Crypto.ALGORITHM_RC2, options: Crypto.OPTION_PKCS7PADDING }
     ];

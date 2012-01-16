@@ -121,7 +121,7 @@ Returns the position after the encoded data inside the destination.
 #### crypto.ALGORITHM\_DES
 #### crypto.ALGORITHM\_3DES
 #### crypto.ALGORITHM\_CAST
-#### crypto.ALGORITHM\_RC4
+#### crypto.ALGORITHM\_RC4 [iOS Only]
 #### crypto.ALGORITHM\_RC2
 
 ### Cryptor Options
@@ -138,8 +138,8 @@ Returns the position after the encoded data inside the destination.
 #### crypto.KEYSIZE\_3DES
 #### crypto.KEYSIZE\_MINCAST
 #### crypto.KEYSIZE\_MAXCAST
-#### crypto.KEYSIZE\_MINRC4
-#### crypto.KEYSIZE\_MAXRC4
+#### crypto.KEYSIZE\_MINRC4 [iOS Only]
+#### crypto.KEYSIZE\_MAXRC4 [iOS Only]
 #### crypto.KEYSIZE\_MINRC2
 #### crypto.KEYSIZE\_MINRC2
 
