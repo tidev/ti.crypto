@@ -234,7 +234,7 @@ typedef struct {
 	return NUMINT(kCCError);
 }
 
--(NSNumber*)final:(id)args
+-(NSNumber*)finish:(id)args
 {
 	CCCryptorRef cryptor = [self cryptor];
 	if (cryptor) {
