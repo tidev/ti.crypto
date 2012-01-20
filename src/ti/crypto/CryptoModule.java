@@ -11,8 +11,8 @@ package ti.crypto;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import org.appcelerator.titanium.util.Log;
-import org.appcelerator.titanium.util.TiConfig;
+import org.appcelerator.kroll.common.Log;
+import org.appcelerator.kroll.common.TiConfig;
 
 @Kroll.module(name="Crypto", id="ti.crypto")
 public class CryptoModule extends KrollModule
