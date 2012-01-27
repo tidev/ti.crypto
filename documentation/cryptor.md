@@ -182,9 +182,9 @@ Returns the number of bytes moved into the dataOut buffer. If an error occurred,
 	var numBytes = cryptor.update(buffer, -1, fixedBuffer);
 </pre>
 
-### final
+### finish
 
-final finishes encryption and decryption operations and obtains the final data output.
+Finishes encryption and decryption operations and obtains the final data output.
 
 #### Arguments
 
