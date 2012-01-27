@@ -162,7 +162,7 @@ App.controllers.cryptoMultiple = function () {
             API.plainTextField.blur();
         },
 
-        handleFinal: function (e) {
+        handleFinish: function (e) {
             // Make sure to set the resizeBuffer flag to false since the decryption operation may have changed its value
             API.cryptor.resizeBuffer = false;
 
@@ -276,16 +276,16 @@ App.controllers.cryptoMultiple = function () {
             });
             win.add(API.cipherTextField);
 
-            var finalBtn = Ti.UI.createButton({
-                title: 'Final',
+            var finishBtn = Ti.UI.createButton({
+                title: 'Finish',
                 top: 10,
                 width: 200,
                 height: 40
             });
-            win.add(finalBtn);
+            win.add(finishBtn);
 
             updateBtn.addEventListener('click', API.handleUpdate);
-            finalBtn.addEventListener('click', API.handleFinal);
+            finishBtn.addEventListener('click', API.handleFinish);
         }
     };
 
