@@ -1,8 +1,8 @@
 var App = {
-    controllers: {},
-    crypto: null,
+    controllers:{},
+    crypto:null,
 
-    loadObject: function (type, name, params) {
+    loadObject:function (type, name, params) {
         if (App[type] == null) {
             Ti.API.warn('Trying to load an object that does not exist in the App namespace');
             return false;
@@ -21,5 +21,6 @@ var App = {
 var Crypto = require('ti.crypto');
 
 Ti.include('ui.js');
+Ti.include('test.js');
 
 App.UI.createAppWindow().open();

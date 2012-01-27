@@ -13,7 +13,7 @@
 //    e. Call the update method on the cryptor created in step 3
 //    f. Append result to the buffer holding all of the encrypted data
 //    g. Repeat d-f until all data has been encrypted
-//    h. Call the final method on the cryptor created in step 3
+//    h. Call the finish method on the cryptor created in step 3
 //    i. Append result to the buffer holding all of the encrypted data
 //    j. Call the release method on the cryptor created in step 3
 // 5. To decrypt:
@@ -24,58 +24,58 @@
 //    e. Call the update method on the cryptor created in step 3
 //    f. Append result to the buffer holding all of the decrypted data
 //    g. Repeat d-f until all data has been decrypted
-//    h. Call the final method on the cryptor created in step 3
+//    h. Call the finish method on the cryptor created in step 3
 //    i. Append result to the buffer holding all of the decrypted data
 //    j. Call the release method on the cryptor created in step 3
 
 App.controllers.cryptoMultiple = function () {
     var API = {
-        params: null,
-        cryptor: null,
-        key: null,
-        initializationVector: null,
-        plainTextField: null,
-        cipherTextField: null,
-        fixedBuffer: null,
-        encryptionBuffer: null,
+        params:null,
+        cryptor:null,
+        key:null,
+        initializationVector:null,
+        plainTextField:null,
+        cipherTextField:null,
+        fixedBuffer:null,
+        encryptionBuffer:null,
 
-        init: function (params) {
+        init:function (params) {
             API.params = params;
 
             // Create a buffer of the specified size to hold the encryption/decryption key
-            API.key = Ti.createBuffer({ length: params.keySize });
+            API.key = Ti.createBuffer({ length:params.keySize });
 
             // For this example, create a key to use based on the key size for the selected algorithm
             // Keys can be defined using text strings ('value:') or hex values ('hexValue:')
             switch (params.keySize) {
                 case 1:
                     Crypto.encodeData({
-                        source: '11',
-                        dest: API.key,
-                        type: Crypto.TYPE_HEXSTRING
+                        source:'11',
+                        dest:API.key,
+                        type:Crypto.TYPE_HEXSTRING
                     });
                     break;
                 case 5:
                     // Hex values can be separated by spaces for easier reading
                     Crypto.encodeData({
-                        source: '00 11 22 33 44',
-                        dest: API.key,
-                        type: Crypto.TYPE_HEXSTRING
+                        source:'00 11 22 33 44',
+                        dest:API.key,
+                        type:Crypto.TYPE_HEXSTRING
                     });
                     break;
                 case 8:
                     // Or, hex values can be specified as one single sequence of numbers
                     Crypto.encodeData({
-                        source: '0011223344556677',
-                        dest: API.key,
-                        type: Crypto.TYPE_HEXSTRING
+                        source:'0011223344556677',
+                        dest:API.key,
+                        type:Crypto.TYPE_HEXSTRING
                     });
                     break;
                 case 16:
                     Crypto.encodeData({
-                        source: '001122334455667788990a0b0c0d0e0f',
-                        dest: API.key,
-                        type: Crypto.TYPE_HEXSTRING
+                        source:'001122334455667788990a0b0c0d0e0f',
+                        dest:API.key,
+                        type:Crypto.TYPE_HEXSTRING
                     });
                     break;
                 case 24:
@@ -94,22 +94,22 @@ App.controllers.cryptoMultiple = function () {
             }
             ;
 
-            API.initializationVector = Ti.createBuffer({ length: 16 });
+            API.initializationVector = Ti.createBuffer({ length:16 });
             var length = Crypto.encodeData({
-                source: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff",
-                dest: API.initializationVector,
-                type: Crypto.TYPE_HEXSTRING
+                source:"00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff",
+                dest:API.initializationVector,
+                type:Crypto.TYPE_HEXSTRING
             });
 
             API.cryptor = Crypto.createCryptor({
-                algorithm: params.algorithm,
-                options: params.options,
-                key: API.key,
-                initializationVector: API.initializationVector
+                algorithm:params.algorithm,
+                options:params.options,
+                key:API.key,
+                initializationVector:API.initializationVector
             });
 
             // Create a fixed size buffer to be used for encryption
-            API.fixedBuffer = Ti.createBuffer({ length: 1024 });
+            API.fixedBuffer = Ti.createBuffer({ length:1024 });
 
             // Create the encryption buffer to hold the result
             API.encryptionBuffer = Ti.createBuffer();
@@ -120,7 +120,7 @@ App.controllers.cryptoMultiple = function () {
             API.cryptor.resizeBuffer = false;
         },
 
-        cleanup: function () {
+        cleanup:function () {
             API.params = null;
             API.cryptor = null;
             API.key = null;
@@ -131,14 +131,14 @@ App.controllers.cryptoMultiple = function () {
             API.encryptionBuffer = null;
         },
 
-        handleUpdate: function (e) {
+        handleUpdate:function (e) {
             API.cryptor.operation = Crypto.ENCRYPT;
 
             // Make sure to set the resizeBuffer flag to false since the decryption operation may have changed its value
             API.cryptor.resizeBuffer = false;
 
             // Create the buffer containing the original plain text that we want to encrypt
-            var buffer = Ti.createBuffer({ value: API.plainTextField.value + '\n' });
+            var buffer = Ti.createBuffer({ value:API.plainTextField.value + '\n' });
 
             // For this example, use the same buffer for both input and output (in-place)
             // You can specify separate buffers for both input and output if desired
@@ -152,8 +152,8 @@ App.controllers.cryptoMultiple = function () {
             } else {
                 // Set the value of the encrypted text (base64 encoded for readability)
                 API.cipherTextField.value = Crypto.decodeData({
-                    source: API.encryptionBuffer,
-                    type: Crypto.TYPE_BASE64STRING
+                    source:API.encryptionBuffer,
+                    type:Crypto.TYPE_BASE64STRING
                 });
             }
 
@@ -162,18 +162,18 @@ App.controllers.cryptoMultiple = function () {
             API.plainTextField.blur();
         },
 
-        handleFinal: function (e) {
+        handleFinish:function (e) {
             // Make sure to set the resizeBuffer flag to false since the decryption operation may have changed its value
             API.cryptor.resizeBuffer = false;
 
-            var numBytes = API.cryptor.final(API.fixedBuffer);
+            var numBytes = API.cryptor.finish(API.fixedBuffer);
             if (numBytes > 0) {
                 // Append the result to our encryption buffer
                 API.encryptionBuffer.append(API.fixedBuffer, 0, numBytes);
 
                 API.cipherTextField.value = Crypto.decodeData({
-                    source: API.encryptionBuffer,
-                    type: Crypto.TYPE_BASE64STRING
+                    source:API.encryptionBuffer,
+                    type:Crypto.TYPE_BASE64STRING
                 });
             }
 
@@ -189,7 +189,7 @@ App.controllers.cryptoMultiple = function () {
             API.cipherTextField.value = '';
         },
 
-        doDecryption: function () {
+        doDecryption:function () {
             API.cryptor.operation = Crypto.DECRYPT;
 
             // For this example, we want the decryption buffer to be auto-sized to hold the decrypted text
@@ -205,9 +205,9 @@ App.controllers.cryptoMultiple = function () {
                 decryptedText.append(decryptionBuffer, 0, numBytes);
             }
 
-            // Since we decrypted the entire encryption buffer in one call the only thing left to do is call final
+            // Since we decrypted the entire encryption buffer in one call the only thing left to do is call finish
             // to get any remaining data in the decryption buffer
-            numBytes = API.cryptor.final(decryptionBuffer);
+            numBytes = API.cryptor.finish(decryptionBuffer);
             if (numBytes > 0) {
                 decryptedText.append(decryptionBuffer, 0, numBytes);
             }
@@ -216,76 +216,76 @@ App.controllers.cryptoMultiple = function () {
             API.cryptor.release();
 
             Ti.UI.createAlertDialog({
-                title: 'Decrypted Text',
-                message: decryptedText.toString(),
-                buttonNames: ['OK']
+                title:'Decrypted Text',
+                message:decryptedText.toString(),
+                buttonNames:['OK']
             }).show();
         },
 
-        create: function (win) {
+        create:function (win) {
             win.title = API.params.title + ' - Multiple';
 
             win.add(Ti.UI.createLabel({
-                text: 'Enter text to encrypt',
-                textAlign: 'left',
-                top: 10,
-                left: 10,
-                color: 'black',
-                width: 'auto',
-                height: 'auto'
+                text:'Enter text to encrypt',
+                textAlign:'left',
+                top:10,
+                left:10,
+                color:'black',
+                width:'auto',
+                height:'auto'
             }));
 
             API.plainTextField = Ti.UI.createTextArea({
-                value: 'Titanium Crypto Module',
-                color: 'black',
-                left: 10, right: 10, top: 4, height: 60,
-                borderColor: 'gray',
-                borderRadius: 8,
-                borderWidth: 1,
-                font: { fontSize: 14 }
+                value:'Titanium Crypto Module',
+                color:'black',
+                left:10, right:10, top:4, height:60,
+                borderColor:'gray',
+                borderRadius:8,
+                borderWidth:1,
+                font:{ fontSize:14 }
             });
             win.add(API.plainTextField);
 
             var updateBtn = Ti.UI.createButton({
-                title: 'Update',
-                top: 10,
-                width: 200,
-                height: 40
+                title:'Update',
+                top:10,
+                width:200,
+                height:40
             });
             win.add(updateBtn);
 
             win.add(Ti.UI.createLabel({
-                text: 'Encrypted text (base64 encoded)',
-                textAlign: 'left',
-                top: 10,
-                left: 10,
-                color: 'black',
-                width: 'auto',
-                height: 'auto'
+                text:'Encrypted text (base64 encoded)',
+                textAlign:'left',
+                top:10,
+                left:10,
+                color:'black',
+                width:'auto',
+                height:'auto'
             }));
 
             API.cipherTextField = Ti.UI.createTextArea({
-                backgroundColor: '#F0F0F0',
-                editable: false,
-                color: 'black',
-                left: 10, right: 10, top: 14, height: 140,
-                borderColor: 'gray',
-                borderRadius: 8,
-                borderWidth: 1,
-                font: { fontSize: 14 }
+                backgroundColor:'#F0F0F0',
+                editable:false,
+                color:'black',
+                left:10, right:10, top:14, height:140,
+                borderColor:'gray',
+                borderRadius:8,
+                borderWidth:1,
+                font:{ fontSize:14 }
             });
             win.add(API.cipherTextField);
 
-            var finalBtn = Ti.UI.createButton({
-                title: 'Final',
-                top: 10,
-                width: 200,
-                height: 40
+            var finishBtn = Ti.UI.createButton({
+                title:'Finish',
+                top:10,
+                width:200,
+                height:40
             });
-            win.add(finalBtn);
+            win.add(finishBtn);
 
             updateBtn.addEventListener('click', API.handleUpdate);
-            finalBtn.addEventListener('click', API.handleFinal);
+            finishBtn.addEventListener('click', API.handleFinish);
         }
     };
 

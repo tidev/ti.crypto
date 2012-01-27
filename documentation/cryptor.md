@@ -36,7 +36,7 @@ Takes one argument, a dictionary with keys:
 	* crypto.ALGORITHM\_DES
 	* crypto.ALGORITHM\_3DES
 	* crypto.ALGORITHM\_CAST
-	* crypto.ALGORITHM\_RC4
+	* crypto.ALGORITHM\_RC4 [iOS Only]
 	* crypto.ALGORITHM\_RC2
 * options[int]: The cryptor options for the operation (default: 0)
     * crypto.OPTION\_PKCS7PADDING
@@ -182,9 +182,9 @@ Returns the number of bytes moved into the dataOut buffer. If an error occurred,
 	var numBytes = cryptor.update(buffer, -1, fixedBuffer);
 </pre>
 
-### final
+### finish
 
-final finishes encryption and decryption operations and obtains the final data output.
+Finishes encryption and decryption operations and obtains the final data output.
 
 #### Arguments
 
@@ -208,7 +208,7 @@ Returns the number of bytes moved into the dataOut buffer. If an error occurred,
 #### Example
 
 <pre>
-	var numBytes = cryptor.final(fixedBuffer)
+	var numBytes = cryptor.finish(fixedBuffer)
 </pre>
 
 ### reset
