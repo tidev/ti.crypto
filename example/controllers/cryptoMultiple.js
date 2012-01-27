@@ -13,7 +13,7 @@
 //    e. Call the update method on the cryptor created in step 3
 //    f. Append result to the buffer holding all of the encrypted data
 //    g. Repeat d-f until all data has been encrypted
-//    h. Call the final method on the cryptor created in step 3
+//    h. Call the finish method on the cryptor created in step 3
 //    i. Append result to the buffer holding all of the encrypted data
 //    j. Call the release method on the cryptor created in step 3
 // 5. To decrypt:
@@ -24,7 +24,7 @@
 //    e. Call the update method on the cryptor created in step 3
 //    f. Append result to the buffer holding all of the decrypted data
 //    g. Repeat d-f until all data has been decrypted
-//    h. Call the final method on the cryptor created in step 3
+//    h. Call the finish method on the cryptor created in step 3
 //    i. Append result to the buffer holding all of the decrypted data
 //    j. Call the release method on the cryptor created in step 3
 
@@ -162,11 +162,11 @@ App.controllers.cryptoMultiple = function () {
             API.plainTextField.blur();
         },
 
-        handleFinal: function (e) {
+        handleFinish: function (e) {
             // Make sure to set the resizeBuffer flag to false since the decryption operation may have changed its value
             API.cryptor.resizeBuffer = false;
 
-            var numBytes = API.cryptor.final(API.fixedBuffer);
+            var numBytes = API.cryptor.finish(API.fixedBuffer);
             if (numBytes > 0) {
                 // Append the result to our encryption buffer
                 API.encryptionBuffer.append(API.fixedBuffer, 0, numBytes);
@@ -205,9 +205,9 @@ App.controllers.cryptoMultiple = function () {
                 decryptedText.append(decryptionBuffer, 0, numBytes);
             }
 
-            // Since we decrypted the entire encryption buffer in one call the only thing left to do is call final
+            // Since we decrypted the entire encryption buffer in one call the only thing left to do is call finish
             // to get any remaining data in the decryption buffer
-            numBytes = API.cryptor.final(decryptionBuffer);
+            numBytes = API.cryptor.finish(decryptionBuffer);
             if (numBytes > 0) {
                 decryptedText.append(decryptionBuffer, 0, numBytes);
             }
@@ -276,16 +276,16 @@ App.controllers.cryptoMultiple = function () {
             });
             win.add(API.cipherTextField);
 
-            var finalBtn = Ti.UI.createButton({
-                title: 'Final',
+            var finishBtn = Ti.UI.createButton({
+                title: 'Finish',
                 top: 10,
                 width: 200,
                 height: 40
             });
-            win.add(finalBtn);
+            win.add(finishBtn);
 
             updateBtn.addEventListener('click', API.handleUpdate);
-            finalBtn.addEventListener('click', API.handleFinal);
+            finishBtn.addEventListener('click', API.handleFinish);
         }
     };
 
