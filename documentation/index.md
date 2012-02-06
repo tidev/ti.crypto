@@ -2,7 +2,7 @@
 
 ## Description
 
-This module provides access to the CCCrypt symmetric encryption interfaces on iOS.
+This module provides access to various encryption and decryption algorithms, and string encodings.
 
 ## Getting Started
 
