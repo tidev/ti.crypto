@@ -2,7 +2,7 @@
 
 ## Description
 
-This module provides access to the CCCrypt symmetric encryption interfaces on iOS.
+This module provides access to various encryption and decryption algorithms, and string encodings.
 
 ## Getting Started
 
@@ -21,12 +21,6 @@ To access this module from JavaScript, you would do the following:
 	var crypto = require("ti.crypto");
 
 The crypto variable is a reference to the Module object.	
-
-## Reference
-
-Use the following link(s) to learn more about using the crypto APIs:
-
-* [iOS Developer Library - Mac OS X Manual Page for CCCrypt(3cc)](http://developer.apple.com/library/ios/#documentation/System/Conceptual/ManPages_iPhoneOS/man3/CCCrypt.3cc.html)
 
 ## Methods
 
@@ -162,7 +156,7 @@ Returns the position after the encoded data inside the destination.
 - Copy the module zip file into the root folder of your Titanium application or in the Titanium system folder (e.g. /Library/Application Support/Titanium). 
 - Set the `<module>` element in tiapp.xml, such as this: 
     <modules> 
-	    <module version="1.0" platform="android">ti.crypto</module> 
+	    <module version="2.0" platform="android">ti.crypto</module> 
     </modules> 
 
 ## Usage

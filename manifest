@@ -4,7 +4,7 @@
 #
 version: 2.0
 apiversion: 2
-description: Symmetric Encryption
+description: This module provides access to various encryption and decryption algorithms, and string encodings.
 author: Jeff English
 license: Appcelerator Commercial License
 copyright: Copyright (c) 2010-2011 by Appcelerator, Inc.

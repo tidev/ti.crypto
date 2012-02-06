@@ -8,6 +8,7 @@ both encrypting and decrypting) in discrete chunks of data called blocks; stream
 arbitrary sized data.
 
 The Cryptor object provides access to both block ciphers and stream ciphers with the same API; however some options are available for block ciphers that do not apply to stream ciphers.
+The Android version of this module only exposes block ciphers.
 
 The general operation of a Cryptor is: 
 
