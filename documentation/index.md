@@ -163,7 +163,7 @@ Returns the position after the encoded data inside the destination.
 See example.
 
 ## Author
-Jeff English
+Dawson Toth
 
 ## Module History
 
