@@ -108,5 +108,3 @@ App.UI = (function () {
         createAppWindow:createAppWindow
     };
 })();
-
-App.UI.createAppWindow().open();
