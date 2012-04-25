@@ -231,8 +231,8 @@ App.controllers.cryptoMultiple = function () {
                 top:10,
                 left:10,
                 color:'black',
-                width:'auto',
-                height:'auto'
+                width:Ti.UI.SIZE || 'auto',
+                height:Ti.UI.SIZE || 'auto'
             }));
 
             API.plainTextField = Ti.UI.createTextArea({
@@ -260,8 +260,8 @@ App.controllers.cryptoMultiple = function () {
                 top:10,
                 left:10,
                 color:'black',
-                width:'auto',
-                height:'auto'
+                width:Ti.UI.SIZE || 'auto',
+                height:Ti.UI.SIZE || 'auto'
             }));
 
             API.cipherTextField = Ti.UI.createTextArea({
