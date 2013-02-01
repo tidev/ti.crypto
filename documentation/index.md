@@ -173,7 +173,7 @@ View the [change log](changelog.html) for this module.
 Please direct all questions, feedback, and concerns to [info@appcelerator.com](mailto:info@appcelerator.com?subject=Android%20Crypto%20Module).
 
 ## License
-Copyright(c) 2010-2011 by Appcelerator, Inc. All Rights Reserved. Please see the LICENSE file included in the distribution for further details.
+Copyright(c) 2010-2013 by Appcelerator, Inc. All Rights Reserved. Please see the LICENSE file included in the distribution for further details.
 
 [crypto.cryptor]: cryptor.html
 
