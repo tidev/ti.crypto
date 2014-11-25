@@ -1,7 +1,7 @@
 language: objective-c
 env:
 global:
-    - "MODULE_NAME=ti.inputview"
+    - "MODULE_NAME=ti.crypto"
 before_install:
     - MODULE_ROOT=$PWD
 install:
