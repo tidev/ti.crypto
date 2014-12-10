@@ -184,7 +184,7 @@ typedef struct {
 		}
 		
 		BOOL final = [TiUtils boolValue:[args objectAtIndex:kArgFinal] def:NO];
-		return NUMINT(CCCryptorGetOutputLength(cryptor, (size_t)length, final));
+		return [NSNumber numberWithUnsignedInteger: CCCryptorGetOutputLength(cryptor, (size_t)length, final)];
 	}
 	
 	return NUMINT(0);
@@ -221,13 +221,13 @@ typedef struct {
 		
 		if (result == kCCSuccess) {
 			if (resizeBuffer) {
-				[cryptData.dataOutBuffer setLength:NUMINT(numBytesMoved)];
+				[cryptData.dataOutBuffer setLength:[NSNumber numberWithUnsignedInteger: numBytesMoved]];
 			}
 		} else {
 			NSLog(@"[ERROR] Error during crypt operation - %d", result);
 		}
 		
-		return (result == kCCSuccess) ? NUMINT(numBytesMoved) : NUMINT(result);
+		return (result == kCCSuccess) ? [NSNumber numberWithUnsignedInteger: numBytesMoved] : NUMINT(result);
 	}
 	
 	return NUMINT(kCCError);
@@ -259,13 +259,13 @@ typedef struct {
 		
 		if (result == kCCSuccess) {
 			if (resizeBuffer) {
-				[cryptData.dataOutBuffer setLength:NUMINT(numBytesMoved)];
+				[cryptData.dataOutBuffer setLength:[NSNumber numberWithUnsignedInteger: numBytesMoved]];
 			}
 		} else {
 			NSLog(@"[ERROR] Error during final operation - %d", result);
 		}
 		
-		return (result == kCCSuccess) ? NUMINT(numBytesMoved) : NUMINT(result);
+		return (result == kCCSuccess) ? [NSNumber numberWithUnsignedInteger: numBytesMoved] : NUMINT(result);
 	}
 	
 	return NUMINT(kCCError);
@@ -367,14 +367,14 @@ typedef struct {
 	
 	if (result == kCCSuccess) {
 		if (resizeBuffer) {
-			[cryptData.dataOutBuffer setLength:NUMINT(numBytesMoved)];
+			[cryptData.dataOutBuffer setLength:[NSNumber numberWithUnsignedInteger: numBytesMoved]];
 		}
 		//NSLog(@"DataOut: %@", [cryptData.dataOutBuffer data]);
 	} else {
 		NSLog(@"[ERROR] Error during crypt operation - %d", result);
 	}
 		
-	return (result == kCCSuccess) ? NUMINT(numBytesMoved) : NUMINT(result);
+	return (result == kCCSuccess) ? [NSNumber numberWithUnsignedInteger: numBytesMoved] : NUMINT(result);
 }
 
 -(NSNumber*)encrypt:(id)args
