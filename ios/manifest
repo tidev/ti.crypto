@@ -15,4 +15,4 @@ name: crypto
 moduleid: ti.crypto
 guid: 5041eaca-a895-4229-a44b-de2f582c9133
 platform: iphone
-minsdk: 3.3.0.GA
+minsdk: 5.1.0
