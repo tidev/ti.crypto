@@ -5,6 +5,11 @@ global:
     - "MODULE_NAME=ti.crypto"
 before_install:
     - MODULE_ROOT=$PWD
+    - brew update
+    - brew outdated caskroom/cask/brew-cask || brew upgrade caskroom/cask/brew-cask
+    - brew tap caskroom/versions
+    - sudo rm -rf /Library/Java/JavaVirtualMachines
+    - brew cask install caskroom/versions/java7
 install:
     - cd $MODULE_ROOT
     - curl -o install.sh https://raw.githubusercontent.com/appcelerator-modules/ci/master/travis/install.sh
