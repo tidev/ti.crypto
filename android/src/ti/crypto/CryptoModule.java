@@ -1,6 +1,6 @@
 /**
  * Ti.Crypto Module
- * Copyright (c) 2010-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2010-2016 by Appcelerator, Inc. All Rights Reserved.
  * Please see the LICENSE included with this distribution for details.
  */
 
@@ -15,7 +15,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
 import ti.crypto.utility.Hex;
 import ti.modules.titanium.BufferProxy;
-import org.apache.commons.codec.binary.Base64;
+import android.util.Base64;
 import org.appcelerator.kroll.common.Log;
 
 @Kroll.module(name = "Crypto", id = "ti.crypto")
@@ -56,7 +56,7 @@ public class CryptoModule extends KrollModule {
 				String raw = (String) source;
 				// The astute among you may notice that I am calling "decodeBase64" in the "encodeData" method.
 				// This is deliberate. "encodeData" takes formatted strings and turns them in to data.
-				data = raw.length() > 0 ? Base64.decodeBase64(raw.getBytes()) : new byte[0];
+				data = raw.length() > 0 ? Base64.decode(raw.getBytes(), Base64.NO_WRAP) : new byte[0];
 			} catch (Exception e) {
 				e.printStackTrace();
 				data = new byte[0];
@@ -105,7 +105,7 @@ public class CryptoModule extends KrollModule {
 				if (type.equals(TYPE_BASE64STRING)) {
 					// The astute among you may notice that I am calling "encodeBase64" in the "decodeData" method.
 					// This is deliberate. "decodeData" takes data and turns it in to formatted strings.
-					result = new String(Base64.encodeBase64(source.getBuffer()));
+					result = new String(Base64.encode(source.getBuffer(), Base64.NO_WRAP));
 				} else if (type.equals(TYPE_HEXSTRING)) {
 					result = Hex.convertToHex(source.getBuffer());
 				} else {

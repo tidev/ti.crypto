@@ -2,13 +2,13 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.0.2
-apiversion: 2
-architectures: armeabi armeabi-v7a x86
+version: 3.0.0
+apiversion: 3
+architectures: armeabi-v7a x86
 description: This module provides access to various encryption and decryption algorithms, and string encodings.
 author: Dawson Toth
 license: Appcelerator Commercial License
-copyright: Copyright (c) 2010-2013 by Appcelerator, Inc.
+copyright: Copyright (c) 2010-2016 by Appcelerator, Inc.
 
 
 # these should not be edited
@@ -16,4 +16,4 @@ name: crypto
 moduleid: ti.crypto
 guid: 5041eaca-a895-4229-a44b-de2f582c9133
 platform: android
-minsdk: 5.0.0
+minsdk: 6.0.0
