@@ -1,0 +1,9 @@
+tmp
+bin
+build
+*.zip
+.DS_Store
+.project
+android/libs
+android/build.properties
+android/dist
