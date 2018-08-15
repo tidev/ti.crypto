@@ -3,13 +3,13 @@
  */
 #import "TiCryptoModuleAssets.h"
 
-extern NSData * dataWithHexString (NSString * hexString);
+extern NSData *dataWithHexString(NSString *hexString);
 
 @implementation TiCryptoModuleAssets
 
-- (NSData*) moduleAsset
+- (NSData *)moduleAsset
 {
-	return nil;
+  return nil;
 }
 
 @end

@@ -8,24 +8,23 @@
 #import <CommonCrypto/CommonCryptor.h>
 
 enum {
-	kCCError = -1
+  kCCError = -1
 };
 
 typedef enum {
-	kDataTypeBlob = 0,
-	kDataTypeHexString = 1,
-	kDataTypeBase64String = 2
+  kDataTypeBlob = 0,
+  kDataTypeHexString = 1,
+  kDataTypeBase64String = 2
 } cryptoDataType;
 
-extern NSString * const kDataTypeBlobName;
-extern NSString * const kDataTypeHexStringName;
-extern NSString * const kDataTypeBase64StringName;
+extern NSString *const kDataTypeBlobName;
+extern NSString *const kDataTypeHexStringName;
+extern NSString *const kDataTypeBase64StringName;
 
 @interface TiCryptoModule : TiModule
 
+- (NSString *)decodeData:(id)args;
 
--(NSString*)decodeData:(id)args;
-
--(NSNumber*)encodeData:(id)args;
+- (NSNumber *)encodeData:(id)args;
 
 @end

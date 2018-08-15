@@ -9,9 +9,9 @@
 
 @interface TiCryptoCryptorProxy : TiProxy {
 
-@private
-	CCCryptorRef	cryptorRef;
-	BOOL			resizeBuffer;
+  @private
+  CCCryptorRef cryptorRef;
+  BOOL resizeBuffer;
 }
 
 @end

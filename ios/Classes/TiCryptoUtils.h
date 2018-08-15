@@ -9,9 +9,9 @@
 @interface TiCryptoUtils : NSObject {
 }
 
-+(NSString*)convertToHex:(TiBuffer*)buffer;
-+(NSMutableData*)convertFromHex:(NSString*)value;
-+(NSString*)base64encode:(TiBuffer*)buffer;
-+(NSMutableData*)base64decode:(NSString*)str;
++ (NSString *)convertToHex:(TiBuffer *)buffer;
++ (NSMutableData *)convertFromHex:(NSString *)value;
++ (NSString *)base64encode:(TiBuffer *)buffer;
++ (NSMutableData *)base64decode:(NSString *)str;
 
 @end
