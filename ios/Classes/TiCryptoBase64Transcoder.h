@@ -25,20 +25,19 @@
  *
  */
 
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-    
-    size_t TiCryptoEstimateBas64EncodedDataSize(size_t inDataSize);
-    size_t TiCryptoEstimateBas64DecodedDataSize(size_t inDataSize);
-    
-    bool TiCryptoBase64EncodeData(const void *inInputData, size_t inInputDataSize, char *outOutputData, size_t *ioOutputDataSize);
-    bool TiCryptoBase64DecodeData(const void *inInputData, size_t inInputDataSize, void *ioOutputData, size_t *ioOutputDataSize);
-    
+
+size_t TiCryptoEstimateBas64EncodedDataSize(size_t inDataSize);
+size_t TiCryptoEstimateBas64DecodedDataSize(size_t inDataSize);
+
+bool TiCryptoBase64EncodeData(const void *inInputData, size_t inInputDataSize, char *outOutputData, size_t *ioOutputDataSize);
+bool TiCryptoBase64DecodeData(const void *inInputData, size_t inInputDataSize, void *ioOutputData, size_t *ioOutputDataSize);
+
 #if defined(__cplusplus)
 }
 #endif
-

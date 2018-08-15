@@ -8,9 +8,9 @@
 
 @interface TiCryptoKeyChainItemProxy : TiProxy {
 
-@private
-	NSMutableDictionary *keychainItemData;	// The actual keychain item data backing store.
-	NSMutableDictionary *keychainQuery;		// A placeholder for the generic keychain item query used to locate the item
+  @private
+  NSMutableDictionary *keychainItemData; // The actual keychain item data backing store.
+  NSMutableDictionary *keychainQuery; // A placeholder for the generic keychain item query used to locate the item
 }
 
 @end

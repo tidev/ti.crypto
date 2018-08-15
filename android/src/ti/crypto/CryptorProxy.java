@@ -25,15 +25,17 @@ import org.spongycastle.crypto.params.ParametersWithRandom;
 import ti.modules.titanium.BufferProxy;
 import android.util.Log;
 
-@Kroll.proxy(creatableInModule = CryptoModule.class, propertyAccessors = { "resizeBuffer", "operation", "algorithm", "options", "key",
-		"initializationVector" })
-public class CryptorProxy extends KrollProxy {
+@Kroll.proxy(creatableInModule = CryptoModule.class,
+			 propertyAccessors = { "resizeBuffer", "operation", "algorithm", "options", "key", "initializationVector" })
+public class CryptorProxy extends KrollProxy
+{
 
 	private static final String LCAT = "CryptoModule";
 	private PaddedBufferedBlockCipher _encryptCipher;
 	private PaddedBufferedBlockCipher _decryptCipher;
 
-	private class CryptOptions {
+	private class CryptOptions
+	{
 		// Configuration Options
 		public boolean resizeBuffer;
 		public int operation;
@@ -48,24 +50,30 @@ public class CryptorProxy extends KrollProxy {
 		public BufferProxy dataOut;
 		public int dataOutLength;
 
-		public byte[] getBytesIn() {
+		public byte[] getBytesIn()
+		{
 			return dataIn.getBuffer();
 		}
 
-		public int getDataInLength() {
+		public int getDataInLength()
+		{
 			return dataInLength > 0 ? dataInLength : dataIn.getLength();
 		}
 
-		public int getDataOutLength() {
+		public int getDataOutLength()
+		{
 			return dataOutLength > 0 ? dataOutLength : dataOut.getLength();
 		}
 
-		public boolean isEncrypt() {
+		public boolean isEncrypt()
+		{
 			return operation == CryptoModule.ENCRYPT;
 		}
 	}
 
-	private CryptOptions prepareCryptOptions(BufferProxy dataIn, int dataInLength, BufferProxy dataOut, int dataOutLength) {
+	private CryptOptions prepareCryptOptions(BufferProxy dataIn, int dataInLength, BufferProxy dataOut,
+											 int dataOutLength)
+	{
 		CryptOptions o = new CryptOptions();
 
 		KrollDict dict = this.getProperties();
@@ -74,7 +82,8 @@ public class CryptorProxy extends KrollProxy {
 		o.algorithm = dict.optInt("algorithm", CryptoModule.ALGORITHM_AES128);
 		o.options = dict.optInt("options", 0);
 		o.key = dict.containsKey("key") ? ((BufferProxy) dict.get("key")).getBuffer() : null;
-		o.iv = dict.containsKey("initializationVector") ? ((BufferProxy) dict.get("initializationVector")).getBuffer() : null;
+		o.iv = dict.containsKey("initializationVector") ? ((BufferProxy) dict.get("initializationVector")).getBuffer()
+														: null;
 
 		o.dataIn = dataIn;
 		o.dataInLength = dataInLength > 0 || dataIn == null ? dataInLength : dataIn.getLength();
@@ -84,7 +93,8 @@ public class CryptorProxy extends KrollProxy {
 		return o;
 	}
 
-	private void logBytes(String id, byte[] arr) {
+	private void logBytes(String id, byte[] arr)
+	{
 		StringBuffer out = new StringBuffer();
 		if (arr == null) {
 			out.append("{{ null }}");
@@ -100,7 +110,8 @@ public class CryptorProxy extends KrollProxy {
 		Log.i(LCAT, id + ": " + out.toString());
 	}
 
-	private PaddedBufferedBlockCipher createCipher(CryptOptions o) {
+	private PaddedBufferedBlockCipher createCipher(CryptOptions o)
+	{
 		// Start off by figuring out what engine to use.
 		// (This will influence if we can use a block cipher or a stream cipher.)
 		BlockCipher bEngine;
@@ -166,7 +177,8 @@ public class CryptorProxy extends KrollProxy {
 		return cipher;
 	}
 
-	private PaddedBufferedBlockCipher getCipher(CryptOptions o) {
+	private PaddedBufferedBlockCipher getCipher(CryptOptions o)
+	{
 		if (o.isEncrypt()) {
 			if (_encryptCipher == null)
 				_encryptCipher = createCipher(o);
@@ -178,7 +190,8 @@ public class CryptorProxy extends KrollProxy {
 		}
 	}
 
-	private int crypt(CryptOptions o) throws Exception {
+	private int crypt(CryptOptions o) throws Exception
+	{
 		// Get our cipher.
 		PaddedBufferedBlockCipher cipher = getCipher(o);
 		if (cipher == null)
@@ -200,8 +213,10 @@ public class CryptorProxy extends KrollProxy {
 	}
 
 	@Kroll.method
-	public int encrypt(BufferProxy dataIn, @Kroll.argument(optional = true) int dataInLength, @Kroll.argument(optional = true) BufferProxy dataOut,
-			@Kroll.argument(optional = true) int dataOutLength) {
+	public int encrypt(BufferProxy dataIn, @Kroll.argument(optional = true) int dataInLength,
+					   @Kroll.argument(optional = true) BufferProxy dataOut,
+					   @Kroll.argument(optional = true) int dataOutLength)
+	{
 		try {
 			CryptOptions o = prepareCryptOptions(dataIn, dataInLength, dataOut, dataOutLength);
 			o.operation = CryptoModule.ENCRYPT;
@@ -215,8 +230,10 @@ public class CryptorProxy extends KrollProxy {
 	}
 
 	@Kroll.method
-	public int decrypt(BufferProxy dataIn, @Kroll.argument(optional = true) int dataInLength, @Kroll.argument(optional = true) BufferProxy dataOut,
-			@Kroll.argument(optional = true) int dataOutLength) {
+	public int decrypt(BufferProxy dataIn, @Kroll.argument(optional = true) int dataInLength,
+					   @Kroll.argument(optional = true) BufferProxy dataOut,
+					   @Kroll.argument(optional = true) int dataOutLength)
+	{
 		try {
 			CryptOptions o = prepareCryptOptions(dataIn, dataInLength, dataOut, dataOutLength);
 			o.operation = CryptoModule.DECRYPT;
@@ -230,7 +247,8 @@ public class CryptorProxy extends KrollProxy {
 	}
 
 	@Kroll.method
-	public int getOutputLength(int dataInLength, boolean isFinal) {
+	public int getOutputLength(int dataInLength, boolean isFinal)
+	{
 		if (dataInLength < 0) {
 			dataInLength = 0;
 		}
@@ -240,8 +258,10 @@ public class CryptorProxy extends KrollProxy {
 	}
 
 	@Kroll.method
-	public int update(BufferProxy dataIn, @Kroll.argument(optional = true) int dataInLength, @Kroll.argument(optional = true) BufferProxy dataOut,
-			@Kroll.argument(optional = true) int dataOutLength) {
+	public int update(BufferProxy dataIn, @Kroll.argument(optional = true) int dataInLength,
+					  @Kroll.argument(optional = true) BufferProxy dataOut,
+					  @Kroll.argument(optional = true) int dataOutLength)
+	{
 		try {
 			// Get our cipher.
 			CryptOptions o = prepareCryptOptions(dataIn, dataInLength, dataOut, dataOutLength);
@@ -268,7 +288,8 @@ public class CryptorProxy extends KrollProxy {
 	}
 
 	@Kroll.method
-	public int finish(BufferProxy dataOut, @Kroll.argument(optional = true) int dataOutLength) {
+	public int finish(BufferProxy dataOut, @Kroll.argument(optional = true) int dataOutLength)
+	{
 		try {
 			// Get our cipher.
 			CryptOptions o = prepareCryptOptions(null, 0, dataOut, dataOutLength);
@@ -294,7 +315,8 @@ public class CryptorProxy extends KrollProxy {
 	}
 
 	@Kroll.method
-	public int reset(@Kroll.argument(optional = true) BufferProxy initializationBuffer) {
+	public int reset(@Kroll.argument(optional = true) BufferProxy initializationBuffer)
+	{
 		if (initializationBuffer != null) {
 			setProperty("initializationVector", initializationBuffer);
 		}
@@ -304,7 +326,8 @@ public class CryptorProxy extends KrollProxy {
 	}
 
 	@Kroll.method(name = "release")
-	public int _release() {
+	public int _release()
+	{
 		_encryptCipher = null;
 		_decryptCipher = null;
 		return CryptoModule.STATUS_SUCCESS;
