@@ -1,6 +1,6 @@
 /**
  * Ti.Crypto Module
- * Copyright (c) 2010-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2010-present by Appcelerator, Inc. All Rights Reserved.
  * Please see the LICENSE included with this distribution for details.
  */
 
@@ -77,9 +77,9 @@ static NSDictionary* dataTypeMap = nil;
 {
     if (dataTypeMap == nil) {
         dataTypeMap = [[NSDictionary alloc] initWithObjectsAndKeys:
-					   NUMINT(kDataTypeBlob),kDataTypeBlobName,
-					   NUMINT(kDataTypeHexString),kDataTypeHexStringName,
-					   NUMINT(kDataTypeBase64String),kDataTypeBase64StringName,
+					   @(kDataTypeBlob),kDataTypeBlobName,
+					   @(kDataTypeHexString),kDataTypeHexStringName,
+					   @(kDataTypeBase64String),kDataTypeBase64StringName,
 					   nil];
     }
     return [[dataTypeMap valueForKey:type] intValue];
@@ -152,18 +152,18 @@ static NSDictionary* dataTypeMap = nil;
 	}
 	
 	// Verify that the offset is within range
-	int destLength = [[dest data] length];
+	NSUInteger destLength = [[dest data] length];
 	if (destPosition >= destLength) {
 		NSLog(@"[ERROR] Destination position of %d is past end of buffer. Buffer size is %d.", destPosition, destLength);
-        return NUMINT(BAD_DEST_OFFSET);
+        return @(BAD_DEST_OFFSET);
     }
 
 	// Verify that the destination can hold the result
-	int srcLength = [data length];
-	int neededLength = destPosition + srcLength;
+	NSUInteger srcLength = [data length];
+	NSUInteger neededLength = destPosition + srcLength;
 	if (neededLength > destLength) {
 		NSLog(@"[ERROR] Destination buffer size of %d is too small. Needed %d.", destLength, neededLength);
-		return NUMINT(TOO_SMALL);
+		return @(TOO_SMALL);
 	}
 	
 	void* bufferBytes = [[dest data] mutableBytes];
@@ -171,7 +171,7 @@ static NSDictionary* dataTypeMap = nil;
 	
 	memcpy(bufferBytes + destPosition, srcBytes, srcLength);
 	
-	return NUMINT(destPosition + srcLength);
+	return @(destPosition + srcLength);
 }
 
 #pragma mark Constants

@@ -1,6 +1,6 @@
 /**
  * Ti.Crypto Module
- * Copyright (c) 2010-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2010-present by Appcelerator, Inc. All Rights Reserved.
  * Please see the LICENSE included with this distribution for details.
  */
 
@@ -36,7 +36,7 @@
 	char byte_chars[3];
 	byte_chars[2] = '\0';
 	int i;
-	int len = [valueToConvert length] / 2;
+	NSUInteger len = [valueToConvert length] / 2;
 	for (i=0; i < len; i++) {
 		byte_chars[0] = [valueToConvert characterAtIndex:i*2];
 		byte_chars[1] = [valueToConvert characterAtIndex:i*2+1];
