@@ -19,23 +19,29 @@ import android.util.Base64;
 import org.appcelerator.kroll.common.Log;
 
 @Kroll.module(name = "Crypto", id = "ti.crypto")
-public class CryptoModule extends KrollModule {
+public class CryptoModule extends KrollModule
+{
 	private static final String LCAT = "CryptoModule";
 
-	static {
+	static
+	{
 		Security.addProvider(new org.spongycastle.jce.provider.BouncyCastleProvider());
 	}
 
-	public CryptoModule() {
+	public CryptoModule()
+	{
 		super();
 	}
 
 	// Methods
 	@Kroll.method
-	public int encodeData(@SuppressWarnings("rawtypes") HashMap args) {
+	public int encodeData(@SuppressWarnings("rawtypes") HashMap args)
+	{
 		// Validate and grab the arguments we need.
 		if (args == null || !args.containsKey("type") || !args.containsKey("source") || !args.containsKey("dest")) {
-			Log.e(LCAT, "Not all required parameters and keys provided to encodeData! Please check the documentation and your usage.");
+			Log.e(
+				LCAT,
+				"Not all required parameters and keys provided to encodeData! Please check the documentation and your usage.");
 			return STATUS_PARAMERROR;
 		}
 		@SuppressWarnings("unchecked")
@@ -69,7 +75,8 @@ public class CryptoModule extends KrollModule {
 		// Verify that the offset is within range.
 		int destLength = dest.getLength();
 		if (destPosition >= destLength) {
-			Log.e(LCAT, "Destination position of " + destPosition + " is past end of buffer. Buffer size is " + destLength + ".");
+			Log.e(LCAT, "Destination position of " + destPosition + " is past end of buffer. Buffer size is "
+							+ destLength + ".");
 			return STATUS_BUFFERTOOSMALL;
 		}
 
@@ -87,10 +94,13 @@ public class CryptoModule extends KrollModule {
 	}
 
 	@Kroll.method
-	public String decodeData(@SuppressWarnings("rawtypes") HashMap args) {
+	public String decodeData(@SuppressWarnings("rawtypes") HashMap args)
+	{
 		// Validate and grab the arguments we need.
 		if (args == null || !args.containsKey("type") || !args.containsKey("source")) {
-			Log.e(LCAT, "Not all required parameters and keys provided to decodeData! Please check the documentation and your usage.");
+			Log.e(
+				LCAT,
+				"Not all required parameters and keys provided to decodeData! Please check the documentation and your usage.");
 			return null;
 		}
 		@SuppressWarnings("unchecked")
@@ -201,5 +211,4 @@ public class CryptoModule extends KrollModule {
 	public static final String TYPE_HEXSTRING = "hexstring";
 	@Kroll.constant
 	public static final String TYPE_BASE64STRING = "base64string";
-
 }

@@ -6,12 +6,14 @@
 
 package ti.crypto.utility;
 
-public class Hex {
+public class Hex
+{
 
 	/**
 	 * Prevent instantiation.
 	 */
-	private Hex() {
+	private Hex()
+	{
 	}
 
 	/**
@@ -21,7 +23,8 @@ public class Hex {
 	 *            A hex string to convert.
 	 * @return The byte array.
 	 */
-	public static byte[] convertFromHex(String s) {
+	public static byte[] convertFromHex(String s)
+	{
 		// Source: http://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java
 		int len = s.length();
 		byte[] data = new byte[len / 2];
@@ -38,7 +41,8 @@ public class Hex {
 	 *            A byte array to convert.
 	 * @return The hex string.
 	 */
-	public static String convertToHex(byte[] data) {
+	public static String convertToHex(byte[] data)
+	{
 		StringBuffer result = new StringBuffer();
 		for (int i = 0; i < data.length; i++) {
 			result.append(Integer.toHexString(data[i]));
