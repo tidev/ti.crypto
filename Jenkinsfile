@@ -1,8 +1,7 @@
-@Library('pipeline-library') _
+library 'pipeline-library@sdkURL'
 
 buildModule {
-	// defaults:
-	//nodeVersion = '4.7.3' // Must have version set up on Jenkins master before it can be changed
-	//sdkVersion = '6.0.3.GA'
-	//androidAPILevel = '23' // if changed, must install on build nodes
+	sdkVersion = '7.4.0.v20180814132725'
+	sdkURL = 'https://builds.appcelerator.com/mobile/master/mobilesdk-7.4.0.v20180814132725-osx.zip'
+	androidNDK = 'r16b'
 }
