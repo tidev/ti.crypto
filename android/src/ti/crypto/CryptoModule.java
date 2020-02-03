@@ -175,7 +175,5 @@ public class CryptoModule extends KrollModule {
   @Kroll.constant public static final String TYPE_HEXSTRING = "hexstring";
   @Kroll.constant public static final String TYPE_BASE64STRING = "base64string";
 
-  public String getApiName() {
- 	return "Ti.Crypto";
-  }
+  public String getApiName() { return "Ti.Crypto"; }
 }
