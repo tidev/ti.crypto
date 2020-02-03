@@ -1,0 +1,429 @@
+---
+name: Modules.Crypto
+summary: Add-on Crypto module
+description: |
+    This module provides access to various encryption and decryption algorithms, and string encodings.
+
+    ## Getting Started
+
+    View the [Using Titanium Modules](http://docs.appcelerator.com/platform/latest/#!/guide/Using_Titanium_Modules) document for instructions on getting
+    started with using this module in your application.
+
+    ## Accessing the crypto Module
+
+    To access this module from JavaScript, you would do the following:
+
+      var crypto = require("ti.crypto");
+
+    The crypto variable is a reference to the Module object.
+
+extends: Titanium.Module
+since: { android: "4.0.0", iphone: "4.0.0", ipad: "4.0.0" }
+platforms: [android, iphone, ipad]
+excludes:
+    methods: [addEventListener, fireEvent, removeEventListener]
+    properties: [bubbleParent]
+
+properties:
+  - name: STATUS_SUCCESS
+    summary: |
+        Used in the [reset](Modules.Crypto.Cryptor.reset) and [release](Modules.Crypto.Cryptor.release) methods
+        to report success for the operation.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: STATUS_ERROR
+    summary: |
+        Used in the [Cryptor](Modules.Crypto.Cryptor) methods to report a generic error for an operation.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: STATUS_PARAMERROR
+    summary: |
+        Used in the [encodeData](Modules.Crypto.encodeData) and [Cryptor](Modules.Crypto.Cryptor) methods to report an error
+        with the supplied parameters or properties.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: STATUS_BUFFERTOOSMALL
+    summary: |
+        Used in the [encodeData](Modules.Crypto.encodeData) and [Cryptor](Modules.Crypto.Cryptor) methods to report an error
+        when the buffer is not long enough to contain the result.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: STATUS_MEMORYFAILURE
+    summary: |
+        Used in the [encodeData](Modules.Crypto.encodeData) and [Cryptor](Modules.Crypto.Cryptor) methods to report an error
+        with allocating memory.
+
+        Only reported by iOS (though the constant is still defined on Android).
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: STATUS_ALIGNMENTERROR
+    summary: |
+        Used in the [encodeData](Modules.Crypto.encodeData) and [Cryptor](Modules.Crypto.Cryptor) methods to report an error.
+        This means that the data you are passing is not correctly padded (specifically that the entire data length including padding is
+        not a multiple of the block size). The most likely cause is that you are truncating your encrypted data somewhere, possibly
+        outside of this routine.
+
+        Only reported by iOS (though the constant is still defined on Android).
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: STATUS_DECODEERROR
+    summary: |
+        Used in the [encodeData](Modules.Crypto.encodeData) and [Cryptor](Modules.Crypto.Cryptor) methods to report an error.
+        Input data did not decode or decrypt properly.
+
+        Only reported by iOS (though the constant is still defined on Android).
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: STATUS_UNIMPLEMENTED
+    summary: |
+        Used in the [getOutputLength](Modules.Crypto.Cryptor.getOutputLength) and various [Cryptor](Modules.Crypto.Cryptor) methods to report an error.
+        Typically used to indicate the given algorithm/mode is not implemented in this OS version.
+
+        Android will report this status only on [getOutputLength](Modules.Crypto.Cryptor.getOutputLength).
+        Otherwise this status is only reported by iOS for the methods performing operations.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: ENCRYPT
+    summary: |
+        Set on the [operation](Modules.Crypto.Cryptor.operation) property.
+        Used in the [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the operation should be to encrypt data.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: DECRYPT
+    summary: |
+        Set on the [operation](Modules.Crypto.Cryptor.operation) property.
+        Used in the [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the operation should be to decrypt data.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: ALGORITHM_AES128
+    summary: |
+        Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
+
+        See https://en.wikipedia.org/wiki/Advanced_Encryption_Standard for more details.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: ALGORITHM_DES
+    summary: |
+        Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
+
+        See https://en.wikipedia.org/wiki/Data_Encryption_Standard for more details.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: ALGORITHM_3DES
+    summary: |
+        Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
+
+        See https://en.wikipedia.org/wiki/Triple_DES for more details.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: ALGORITHM_CAST
+    summary: |
+        Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
+
+        See https://en.wikipedia.org/wiki/CAST-128 for more details.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: ALGORITHM_RC4
+    summary: |
+        Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
+        
+        See https://en.wikipedia.org/wiki/RC4 for more details.
+
+        Note that while defined on Android, this algorithm is unimplemented.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: ALGORITHM_RC2
+    summary: |
+        Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
+        
+        See https://en.wikipedia.org/wiki/RC2 for more details.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: OPTION_PKCS7PADDING
+    summary: |
+        Set on the [options](Modules.Crypto.Cryptor.options) property.
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
+        
+        See https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS#5_and_PKCS#7 for more details.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: OPTION_ECBMODE
+    summary: |
+        Set on the [options](Modules.Crypto.Cryptor.options) property.
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
+        
+        See https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Electronic_Codebook_(ECB) for more details.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_AES128
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 16
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_AES192
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 24
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_AES256
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 32
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_DES
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 8
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_3DES
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 24
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_MINCAST
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 5
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_MAXCAST
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 16
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_MINRC4
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 1
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_MAXRC4
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 512
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_MINRC2
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 1
+    platforms: [android, iphone, ipad]
+
+  - name: KEYSIZE_MAXRC2
+    summary: |
+        Number of bytes used to hold a key of the given type. Useful for creating instances of <Titanium.Buffer> to generate a key for the [key](Modules.Crypto.Cryptor.key) property
+        used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    permission: read-only
+    value: 128
+    platforms: [android, iphone, ipad]
+
+  - name: BLOCKSIZE_AES128
+    summary:  Number of bytes for blocks of the related algorithm.
+    type: Number
+    permission: read-only
+    value: 16
+    platforms: [android, iphone, ipad]
+
+  - name: BLOCKSIZE_DES
+    summary:  Number of bytes for blocks of the related algorithm.
+    type: Number
+    permission: read-only
+    value: 8
+    platforms: [android, iphone, ipad]
+
+  - name: BLOCKSIZE_3DES
+    summary:  Number of bytes for blocks of the related algorithm.
+    type: Number
+    permission: read-only
+    value: 8
+    platforms: [android, iphone, ipad]
+
+  - name: BLOCKSIZE_CAST
+    summary:  Number of bytes for blocks of the related algorithm.
+    type: Number
+    permission: read-only
+    value: 8
+    platforms: [android, iphone, ipad]
+
+  - name: BLOCKSIZE_RC2
+    summary:  Number of bytes for blocks of the related algorithm.
+    type: Number
+    permission: read-only
+    value: 8
+    platforms: [android, iphone, ipad]
+
+  - name: TYPE_BLOB
+    summary: |
+        Used in the [encodeData](Modules.Crypto.encodeData) method to specify expected input is a Ti.Blob instance.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: TYPE_HEXSTRING
+    summary: |
+        Used in the [encodeData](Modules.Crypto.encodeData) and [decodeData](Modules.Crypto.decodeData) methods
+        to specify expected string format. A hexadecimal formatted string. Each byte is represented by 2 hexadecimal numbers.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+  - name: TYPE_BASE64STRING
+    summary: |
+        Used in the [encodeData](Modules.Crypto.encodeData) and [decodeData](Modules.Crypto.decodeData) methods
+        to specify expected string format. A Base64 encoded string.
+    type: Number
+    permission: read-only
+    platforms: [android, iphone, ipad]
+
+methods:
+
+  - name: encodeData
+    summary: Encodes the source into the destination buffer using the specified data type. This is a codec method used for converting data to a destination buffer.
+    since: "3.1.0"
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: dictionary
+        summary: a dictionary with keys
+        type: EncodeDataDict
+    returns:
+      type: Number
+      summary: Returns the position after the encoded data inside the destination.
+
+  - name: decodeData
+    summary: Decodes a source buffer into a string using the specified data type. This is a codec method used for converting data from a source buffer into a displayable string.
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: dictionary
+        summary: a dictionary with keys
+        type: DecodeDataDict
+    returns:
+      type: String
+      summary: Returns the decoded string
+
+---
+name: EncodeDataDict
+summary: Simple object passed to <Modules.Crypto.encodeData> to encode data into a Titanium.Buffer.
+properties:
+  - name: source
+    summary: The data to encode (see 'type' for supported object types)
+    type: [String, Titanium.Blob]
+    optional: false
+
+  - name: dest
+    summary: The Titanium.Buffer to receive the encoded data
+    type: Titanium.Buffer
+    optional: false
+
+  - name: destPosition
+    summary: |
+        The position in dest to set the encoded data (optional, default is 0)
+    type: Number
+    default: 0
+    optional: true
+
+  - name: type
+    summary: |
+        The data type of the source object:
+
+        * [TYPE_BASE64STRING](Modules.Crypto.TYPE_BASE64STRING) - source is a base64 encoded string
+        * [TYPE_HEXSTRING](Modules.Crypto.TYPE_HEXSTRING) - source is a hexadecimal formatted string
+        * [TYPE_BLOB](Modules.Crypto.TYPE_BLOB) - source is a Titanium.Blob object
+    type: String
+    optional: false
+
+---
+name: DecodeDataDict
+summary: Simple object passed to <Modules.Crypto.decodeData> to decode data into a Titanium.Buffer.
+properties:
+  - name: source
+    summary: The Titanium.Buffer to decode
+    type: Titanium.Buffer
+    optional: false
+
+  - name: type
+    summary: |
+        The format of the returned string:
+
+        * [TYPE_BASE64STRING](Modules.Crypto.TYPE_BASE64STRING) - source is a base64 encoded string
+        * [TYPE_HEXSTRING](Modules.Crypto.TYPE_HEXSTRING) - source is a hexadecimal formatted string
+    type: String
+    optional: false
