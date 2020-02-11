@@ -4,6 +4,22 @@ build
 *.zip
 .DS_Store
 .project
+
 android/libs
 android/build.properties
 android/dist
+android/java-sources.txt
+
+ios/dist
+ios/build
+
+node_modules/
+
+.vscode/
+*.xcworkspace/
+xcuserdata
+*.xcuserstate
+*.xcuserdata*
+
+# karma test reports
+TESTS-*.xml

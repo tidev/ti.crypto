@@ -1,0 +1,254 @@
+---
+name: Modules.Crypto.Cryptor
+summary: |
+    The Cryptor object provides access to a number of symmetric encryption algorithms. Symmetric encryption
+    algorithms come in two "flavors" - block ciphers, and stream ciphers. Block ciphers process data (while
+    both encrypting and decrypting) in discrete chunks of data called blocks; stream ciphers operate on
+    arbitrary sized data.
+description: |
+    The Cryptor object provides access to both block ciphers and stream ciphers with the same API; however some options are available for block ciphers that do not apply to stream ciphers.
+    The Android version of this module only exposes block ciphers.
+
+    The general operation of a Cryptor is: 
+
+    1. Initialize it with raw key data and other optional fields with crypto.createCryptor()
+    2. Process input data via one or more calls to cryptor.update()
+    3. Obtain possible remaining output data with cryptor.final()
+    4. The cryptor object is disposed of by setting the cryptor variable to null. The cryptor object can be reused (with the same key data as provided to crypto.createCryptor()) by calling cryptor.reset() or cryptor.release().
+
+    Alternatively, cryptor.encrypt() and cryptor.decrypt() methods are provided for a stateless, one-shot encrypt or decrypt operation.
+extends: Titanium.Proxy
+since: { android: "4.0.0", iphone: "4.0.0", ipad: "4.0.0" }
+platforms: [android, iphone, ipad]
+createable: true
+excludes:
+    methods: [addEventListener, fireEvent, removeEventListener]
+    properties: [bubbleParent]
+
+properties:
+  - name: resizeBuffer
+    summary: |
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
+        [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+        Indicates if the dataOut buffer should be resized to the size needed to hold the result of the operation.
+    type: Boolean
+    default: true
+    platforms: [android, iphone, ipad]
+  - name: operation
+    summary: |
+        Used in the [capture](Modules.Barcode.capture) and [parse](Modules.Barcode.parse) methods
+        and the [success](Modules.Barcode.success) event to specify accepted formats.
+    type: Number
+    default: Modules.Crypto.ENCRYPT
+    platforms: [android, iphone, ipad]
+  - name: algorithm
+    summary: |
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
+        [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    default: Modules.Crypto.ALGORITHM_AES128
+    platforms: [android, iphone, ipad]
+  - name: options
+    summary: |
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
+        [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Number
+    default: 0
+    platforms: [android, iphone, ipad]
+  - name: key
+    summary: |
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
+        [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Titanium.Buffer
+    default: null
+    platforms: [android, iphone, ipad]
+  - name: initializationVector
+    summary: |
+        Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
+        [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
+    type: Titanium.Buffer
+    default: null
+    platforms: [android, iphone, ipad]
+
+methods:
+  - name: encrypt
+    summary: Stateless, one-shot encryption operation.
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: dataIn
+        summary: The Titanium.Buffer object containing the data to encrypt
+        type: Titanium.Buffer
+      - name: dataInLength
+        summary: The number of bytes in the dataIn buffer to encrypt. If this argument is not provided or is < 0, then the length of the dataIn buffer will be used.
+        type: Number
+        optional: true
+      - name: dataOut
+        summary: |
+            The Titanium.Buffer object to receive the encrypted data. If this argument is not provided, then the dataIn buffer will be used. 
+            * If the [resizeBuffer](Modules.Crypto.Cryptor.resizeBuffer) property is set to true, then the dataOut buffer will be resized to the size of the encrypted data
+            * If the [resizeBuffer](Modules.Crypto.Cryptor.resizeBuffer) property is set to false, then ensure that the dataOut buffer is large enough to receive the encrypted data.
+        type: Titanium.Buffer
+        optional: true
+      - name: dataOutLength
+        summary: The number of bytes available in the dataOut buffer. If this argument is not provided or is < 0, then the length of the dataOut buffer will be used.
+        type: Number
+        optional: true
+    returns:
+      type: Number
+      summary: |
+          Returns the number of bytes encrypted into the dataOut buffer. If an error occurred, then the return value will be less than zero and will be one of the following values:
+          * [STATUS_ERROR](Modules.Crypto.STATUS_ERROR)
+          * [STATUS_PARAMERROR](Modules.Crypto.STATUS_PARAMERROR)
+          * [STATUS_BUFFERTOOSMALL](Modules.Crypto.STATUS_BUFFERTOOSMALL)
+          * [STATUS_MEMORYFAILURE](Modules.Crypto.STATUS_MEMORYFAILURE)
+          * [STATUS_ALIGNMENTERROR](Modules.Crypto.STATUS_ALIGNMENTERROR)
+          * [STATUS_DECODEERROR](Modules.Crypto.STATUS_DECODEERROR)
+          * [STATUS_UNIMPLEMENTED](Modules.Crypto.STATUS_UNIMPLEMENTED)
+
+  - name: decrypt
+    summary: Stateless, one-shot decryption operation.
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: dataIn
+        summary: The Titanium.Buffer object containing the data to decrypt
+        type: Titanium.Buffer
+      - name: dataInLength
+        summary: The number of bytes in the dataIn buffer to decrypt. If this argument is not provided or is < 0, then the length of the dataIn buffer will be used.
+        type: Number
+        optional: true
+      - name: dataOut
+        summary: |
+            The Titanium.Buffer object to receive the decrypted data. If this argument is not provided, then the dataIn buffer will be used. 
+            * If the [resizeBuffer](Modules.Crypto.Cryptor.resizeBuffer) property is set to true, then the dataOut buffer will be resized to the size of the decrypted data
+            * If the [resizeBuffer](Modules.Crypto.Cryptor.resizeBuffer) property is set to false, then ensure that the dataOut buffer is large enough to receive the decrypted data.
+        type: Titanium.Buffer
+        optional: true
+      - name: dataOutLength
+        summary: The number of bytes available in the dataOut buffer. If this argument is not provided or is < 0, then the length of the dataOut buffer will be used.
+        type: Number
+        optional: true
+    returns:
+      type: Number
+      summary: |
+          Returns the number of bytes decrypted into the dataOut buffer. If an error occurred, then the return value will be less than zero and will be one of the following values:
+          * [STATUS_ERROR](Modules.Crypto.STATUS_ERROR)
+          * [STATUS_PARAMERROR](Modules.Crypto.STATUS_PARAMERROR)
+          * [STATUS_BUFFERTOOSMALL](Modules.Crypto.STATUS_BUFFERTOOSMALL)
+          * [STATUS_MEMORYFAILURE](Modules.Crypto.STATUS_MEMORYFAILURE)
+          * [STATUS_ALIGNMENTERROR](Modules.Crypto.STATUS_ALIGNMENTERROR)
+          * [STATUS_DECODEERROR](Modules.Crypto.STATUS_DECODEERROR)
+          * [STATUS_UNIMPLEMENTED](Modules.Crypto.STATUS_UNIMPLEMENTED)
+
+  - name: getOutputLength
+    summary: getOutputLength is used to determine the output buffer size required to process a given input size.
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: dataInLength
+        summary: The number of bytes for the operation
+        type: Number
+      - name: final
+        summary: |
+            Indicates if the calculation is for determining the output buffer size for a call to [final](Modules.Crypto.Cryptor.final) 
+            or [update](Modules.Crypto.Cryptor.update). Set to true for [final](Modules.Crypto.Cryptor.final) and false for 
+            [update](Modules.Crypto.Cryptor.update).
+        type: Boolean
+    returns:
+      type: Number
+      summary: Returns the number of bytes required for the output buffer
+
+  - name: update
+    summary: update is used to encrypt or decrypt data. This method can be called multiple times. The caller does not need to align input data lengths to block sizes; input is buffered as necessary for block ciphers.
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: dataIn
+        summary: The Titanium.Buffer object containing the data to decrypt
+        type: Titanium.Buffer
+      - name: dataInLength
+        summary: The number of bytes in the dataIn buffer to process. If this argument is not provided or is < 0, then the length of the dataIn buffer will be used.
+        type: Number
+        optional: true
+      - name: dataOut
+        summary: |
+            The Titanium.Buffer object to receive the output data. If this argument is not provided, then the dataIn buffer will be used. 
+            * If the [resizeBuffer](Modules.Crypto.Cryptor.resizeBuffer) property is set to true, then the dataOut buffer will be resized to the size of the decrypted data
+            * If the [resizeBuffer](Modules.Crypto.Cryptor.resizeBuffer) property is set to false, then ensure that the dataOut buffer is large enough to receive the decrypted data.
+        type: Titanium.Buffer
+        optional: true
+      - name: dataOutLength
+        summary: The number of bytes available in the dataOut buffer. If this argument is not provided or is < 0, then the length of the dataOut buffer will be used.
+        type: Number
+        optional: true
+    returns:
+      type: Number
+      summary: |
+          Returns the number of bytes moved into the dataOut buffer. If an error occurred, then the return value will be less than zero and will be one of the following values:
+          * [STATUS_ERROR](Modules.Crypto.STATUS_ERROR)
+          * [STATUS_PARAMERROR](Modules.Crypto.STATUS_PARAMERROR)
+          * [STATUS_BUFFERTOOSMALL](Modules.Crypto.STATUS_BUFFERTOOSMALL)
+          * [STATUS_MEMORYFAILURE](Modules.Crypto.STATUS_MEMORYFAILURE)
+          * [STATUS_ALIGNMENTERROR](Modules.Crypto.STATUS_ALIGNMENTERROR)
+          * [STATUS_DECODEERROR](Modules.Crypto.STATUS_DECODEERROR)
+          * [STATUS_UNIMPLEMENTED](Modules.Crypto.STATUS_UNIMPLEMENTED)
+
+  - name: finish
+    summary: Finishes encryption and decryption operations and obtains the final data output.
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: dataOut
+        summary: |
+            The Titanium.Buffer object to receive the output data. If this argument is not provided, then the dataIn buffer will be used. 
+            * If the [resizeBuffer](Modules.Crypto.Cryptor.resizeBuffer) property is set to true, then the dataOut buffer will be resized to the size of the decrypted data
+            * If the [resizeBuffer](Modules.Crypto.Cryptor.resizeBuffer) property is set to false, then ensure that the dataOut buffer is large enough to receive the decrypted data.
+        type: Titanium.Buffer
+      - name: dataOutLength
+        summary: The number of bytes available in the dataOut buffer. If this argument is not provided or is < 0, then the length of the dataOut buffer will be used.
+        type: Number
+        optional: true
+    returns:
+      type: Number
+      summary: |
+          Returns the number of bytes moved into the dataOut buffer. If an error occurred, then the return value will be less than zero and will be one of the following values:
+          * [STATUS_ERROR](Modules.Crypto.STATUS_ERROR)
+          * [STATUS_PARAMERROR](Modules.Crypto.STATUS_PARAMERROR)
+          * [STATUS_BUFFERTOOSMALL](Modules.Crypto.STATUS_BUFFERTOOSMALL)
+          * [STATUS_MEMORYFAILURE](Modules.Crypto.STATUS_MEMORYFAILURE)
+          * [STATUS_ALIGNMENTERROR](Modules.Crypto.STATUS_ALIGNMENTERROR)
+          * [STATUS_DECODEERROR](Modules.Crypto.STATUS_DECODEERROR)
+          * [STATUS_UNIMPLEMENTED](Modules.Crypto.STATUS_UNIMPLEMENTED)
+
+  - name: reset
+    summary: reset reinitializes an existing cryptor object with a (possibly) new initialization vector.
+    platforms: [android, iphone, ipad]
+    parameters:
+      - name: initializationVector
+        summary: The Titanium.Buffer object containing the initialization vector.
+        type: Titanium.Buffer
+        optional: true
+    returns:
+      type: Number
+      summary: |
+          Returns one of the status constants:
+          * [STATUS_SUCCESS](Modules.Crypto.STATUS_SUCCESS)
+          * [STATUS_ERROR](Modules.Crypto.STATUS_ERROR)
+          * [STATUS_PARAMERROR](Modules.Crypto.STATUS_PARAMERROR)
+          * [STATUS_BUFFERTOOSMALL](Modules.Crypto.STATUS_BUFFERTOOSMALL)
+          * [STATUS_MEMORYFAILURE](Modules.Crypto.STATUS_MEMORYFAILURE)
+          * [STATUS_ALIGNMENTERROR](Modules.Crypto.STATUS_ALIGNMENTERROR)
+          * [STATUS_DECODEERROR](Modules.Crypto.STATUS_DECODEERROR)
+          * [STATUS_UNIMPLEMENTED](Modules.Crypto.STATUS_UNIMPLEMENTED)
+
+  - name: release
+    summary: release will dispose of the internal cryptor data
+    platforms: [android, iphone, ipad]
+    returns:
+      type: Number
+      summary: |
+          Returns one of the status constants:
+          * [STATUS_SUCCESS](Modules.Crypto.STATUS_SUCCESS)
+          * [STATUS_ERROR](Modules.Crypto.STATUS_ERROR)
+          * [STATUS_PARAMERROR](Modules.Crypto.STATUS_PARAMERROR)
+          * [STATUS_BUFFERTOOSMALL](Modules.Crypto.STATUS_BUFFERTOOSMALL)
+          * [STATUS_MEMORYFAILURE](Modules.Crypto.STATUS_MEMORYFAILURE)
+          * [STATUS_ALIGNMENTERROR](Modules.Crypto.STATUS_ALIGNMENTERROR)
+          * [STATUS_DECODEERROR](Modules.Crypto.STATUS_DECODEERROR)
+          * [STATUS_UNIMPLEMENTED](Modules.Crypto.STATUS_UNIMPLEMENTED)

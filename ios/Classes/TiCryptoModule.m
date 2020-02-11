@@ -27,6 +27,11 @@
   return @"ti.crypto";
 }
 
+- (NSString *)apiName
+{
+  return @"Ti.Crypto";
+}
+
 #pragma mark Lifecycle
 
 - (void)startup
