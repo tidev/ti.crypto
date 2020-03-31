@@ -1,3 +1,6 @@
+import { App } from './app.js'
+import { Crypto } from './app.js'
+
 App.UI = (function () {
     var algorithms = [
         { title:'AES-128', subTitle:'128-bit key', keySize:Crypto.KEYSIZE_AES128, algorithm:Crypto.ALGORITHM_AES128, options:Crypto.OPTION_PKCS7PADDING },
@@ -45,7 +48,7 @@ App.UI = (function () {
         var tableView = Ti.UI.createTableView({});
         var cnt = algorithms.length;
         for (var index = 0; index < cnt; index++) {
-            row = Ti.UI.createTableViewRow({ height: 45, layout:'vertical', hasChild:true });
+            var row = Ti.UI.createTableViewRow({ height: 45, layout:'vertical', hasChild:true });
             row.add(Ti.UI.createLabel({ text:algorithms[index].title, top:0, left:4, height:Ti.UI.SIZE || 'auto', width:Ti.UI.SIZE || 'auto', font:{ fontSize:16, fontWeight:'bold' } }));
             row.add(Ti.UI.createLabel({ text:algorithms[index].subTitle, top:0, left:4, height:Ti.UI.SIZE || 'auto', width:Ti.UI.SIZE || 'auto', font:{ fontSize:12 } }));
             tableView.appendRow(row);

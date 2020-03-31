@@ -14,6 +14,8 @@
 //    b. Create a buffer to receive the unencrypted data (optionally, use the input buffer to contain the decrypted data)
 //    c. Call the decrypt method on the cryptor created in step 4
 
+import { App } from './app.js'
+
 App.controllers.cryptoSingle = function () {
     var API = {
         params: null,
