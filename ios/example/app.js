@@ -10,7 +10,7 @@ var App = {
             Ti.API.warn('Trying to load an object that does not exist in the App namespace');
             return false;
         } else if (App[type][name] == null) {
-            Ti.include(type.toLowerCase() + '/' + name + '.js');
+            require(type.toLowerCase() + '/' + name);
             Ti.API.info(type + ' ' + name + ' loaded');
             return new App[type][name](params);
         } else {
@@ -20,7 +20,9 @@ var App = {
     }
 };
 
-Ti.include('ui.js');
-Ti.include('test.js');
+global.App = App;
+global.Crypto = Crypto;
+require('./ui');
+require('./test');
 
 App.UI.createAppWindow().open();
