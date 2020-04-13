@@ -1,5 +1,3 @@
-import { App } from './app.js'
-import { Crypto } from './app.js'
 
 App.UI = (function () {
     var algorithms = [

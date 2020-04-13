@@ -2,7 +2,6 @@
  This file runs through all of the supported algorithms to test if they are functioning properly.
  */
 
-import { Crypto } from './app.js'
 function testEncodeDecode(type, encodedString, rawData) {
 
     // First turn the encoded string in to the raw data.

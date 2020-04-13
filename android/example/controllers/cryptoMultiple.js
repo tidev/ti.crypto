@@ -28,8 +28,6 @@
 //    i. Append result to the buffer holding all of the decrypted data
 //    j. Call the release method on the cryptor created in step 3
 
-import { App } from './app.js'
-
 App.controllers.cryptoMultiple = function () {
     var API = {
         params:null,

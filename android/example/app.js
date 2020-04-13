@@ -16,13 +16,13 @@ var App = {
         }
     }
 };
-export { App };
+global.App = App;
 
 // Load the crypto modules
 var Crypto = require('ti.crypto');
-export { Crypto };
+global.Crypto = Crypto;
 
-require('ui');
-require('test');
+require('./ui');
+require('./test');
 
 App.UI.createAppWindow().open();
