@@ -1,4 +1,3 @@
-
 App.UI = (function () {
     var algorithms = [
         { title:'AES-128', subTitle:'128-bit key', keySize:Crypto.KEYSIZE_AES128, algorithm:Crypto.ALGORITHM_AES128, options:Crypto.OPTION_PKCS7PADDING },
