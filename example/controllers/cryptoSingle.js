@@ -22,10 +22,10 @@ App.controllers.cryptoSingle = function () {
 		initializationVector: null,
 		plainTextField: null,
 		cipherTextField: null,
-		
+
 		init: function (params) {
 			API.params = params;
-			
+
 			// Create a buffer of the specified size to hold the encryption/decryption key
 			API.key = Ti.createBuffer({ length: params.keySize });
 
@@ -41,7 +41,7 @@ App.controllers.cryptoSingle = function () {
 					break;
 				case 5:
 					// Hex values can be separated by spaces for easier reading
-				    Crypto.encodeData({
+					Crypto.encodeData({
 						source: '00 11 22 33 44',
 						dest: API.key,
 						type: Crypto.TYPE_HEXSTRING
@@ -75,15 +75,15 @@ App.controllers.cryptoSingle = function () {
 					var string100 = '0000000000111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999';
 					API.key.value = string100 + string100 + string100 + string100 + string100 + '012345678901';
 					break;
-			};
-			
+			}
+
 			API.initializationVector = Ti.createBuffer({ length: 16 });
 			var length = Crypto.encodeData({
-				source: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff",
+				source: '00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff',
 				dest: API.initializationVector,
 				type: Crypto.TYPE_HEXSTRING
 			});
-			
+
 			API.cryptor = Crypto.createCryptor({
 				algorithm: params.algorithm,
 				options: params.options,
@@ -91,8 +91,8 @@ App.controllers.cryptoSingle = function () {
 				initializationVector: API.initializationVector
 			});
 		},
-		
-		cleanup: function() {
+
+		cleanup: function () {
 			API.params = null;
 			API.cryptor = null;
 			API.key = null;
@@ -100,17 +100,17 @@ App.controllers.cryptoSingle = function () {
 			API.plainTextField = null;
 			API.cipherTextField = null;
 		},
-		
-		handleEncrypt: function(e) {
+
+		handleEncrypt: function (e) {
 			// Create the buffer containing the original plain text that we want to encrypt
 			var buffer = Ti.createBuffer({ value: API.plainTextField.value });
-		
+
 			// For this example, use the same buffer for both input and output (in-place)
 			// You can specify separate buffers for both input and output if desired
 			var numBytes = API.cryptor.encrypt(buffer);
-			
+
 			if (numBytes < 0) {
-				alert('Error occurred during encryption: ' + numBytes);
+				alert('Error occurred during encryption: ' + numBytes); // eslint-disable-line no-alert
 			} else {
 				// Set the value of the encrypted text (base64 encoded for readability)
 				API.cipherTextField.value = Crypto.decodeData({
@@ -118,41 +118,41 @@ App.controllers.cryptoSingle = function () {
 					type: Crypto.TYPE_BASE64STRING
 				});
 			}
-			
+
 			API.plainTextField.blur();
 		},
-	
-		handleDecrypt: function(e) {
+
+		handleDecrypt: function (e) {
 			// Load the buffer with the base64encoded value from the encrypted text field
 			var buffer = Ti.createBuffer({ length: API.cipherTextField.value.length });
 			var length = Crypto.encodeData({
 				source: API.cipherTextField.value,
 				dest: buffer,
 				type: Crypto.TYPE_BASE64STRING
-			});		
+			});
 			if (length < 0) {
 				Ti.API.info('ERROR: Buffer too small');
 				return;
 			}
-				
+
 			// For this example, use the same buffer for both input and output (in-place)
 			// You can specify separate buffers for both input and output if desired
-			var numBytes = API.cryptor.decrypt(buffer,length);
-			
+			var numBytes = API.cryptor.decrypt(buffer, length);
+
 			if (numBytes < 0) {
-				alert('Error occurred during encryption: ' + numBytes);
+				alert('Error occurred during encryption: ' + numBytes);  // eslint-disable-line no-alert
 			} else {
 				Ti.UI.createAlertDialog({
 					title: 'Decrypted Text',
 					message: buffer.toString(),
-					buttonNames: ['OK']
+					buttonNames: [ 'OK' ]
 				}).show();
 			}
 		},
-		
-		create: function(win) {
+
+		create: function (win) {
 			win.title = API.params.title + ' - Single';
-			
+
 			win.add(Ti.UI.createLabel({
 				text: 'Enter text to encrypt',
 				textAlign: 'left',
@@ -162,7 +162,7 @@ App.controllers.cryptoSingle = function () {
 				width: Ti.UI.SIZE || 'auto',
 				height: Ti.UI.SIZE || 'auto'
 			}));
-			
+
 			API.plainTextField = Ti.UI.createTextArea({
 				value: 'Titanium Crypto Module',
 				color: 'black',
@@ -173,7 +173,7 @@ App.controllers.cryptoSingle = function () {
 				font: { fontSize: 14 }
 			});
 			win.add(API.plainTextField);
-			
+
 			var encryptBtn = Ti.UI.createButton({
 				title: 'Encrypt',
 				top: 10,
@@ -181,7 +181,7 @@ App.controllers.cryptoSingle = function () {
 				height: 40
 			});
 			win.add(encryptBtn);
-			
+
 			win.add(Ti.UI.createLabel({
 				text: 'Encrypted text (base64 encoded)',
 				textAlign: 'left',
@@ -191,7 +191,7 @@ App.controllers.cryptoSingle = function () {
 				width: Ti.UI.SIZE || 'auto',
 				height: Ti.UI.SIZE || 'auto'
 			}));
-			
+
 			API.cipherTextField = Ti.UI.createTextArea({
 				backgroundColor: '#F0F0F0',
 				editable: false,
@@ -203,7 +203,7 @@ App.controllers.cryptoSingle = function () {
 				font: { fontSize: 14 }
 			});
 			win.add(API.cipherTextField);
-			
+
 			var decryptBtn = Ti.UI.createButton({
 				title: 'Decrypt',
 				top: 10,
@@ -211,11 +211,11 @@ App.controllers.cryptoSingle = function () {
 				height: 40
 			});
 			win.add(decryptBtn);
-			
+
 			encryptBtn.addEventListener('click', API.handleEncrypt);
 			decryptBtn.addEventListener('click', API.handleDecrypt);
 		}
 	};
-	
+
 	return API;
-}
+};
