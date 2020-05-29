@@ -1,6 +1,6 @@
 {
   "name": "@titanium-sdk/ti.crypto",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Provides access to various encryption and decryption algorithms.",
   "private": true,
   "scripts": {
