@@ -12,5 +12,11 @@
         "sourceType": "module"
       }
     }
-  ]
+  ],
+  "globals": {
+    "App": "writeable",
+    "Crypto": "readonly",
+    "isiOS": "readonly",
+    "isAndroid": "readonly"
+  }
 }
