@@ -1,6 +1,6 @@
 App.UI = (function () {
 	var algorithms;
-	if (isiOS) {
+	if (OS_IOS) {
 		algorithms = [
 			{ title: 'AES-128', subTitle: '128-bit key', keySize: Crypto.KEYSIZE_AES128, algorithm: Crypto.ALGORITHM_AES128, options: Crypto.OPTION_PKCS7PADDING },
 			{ title: 'AES-128', subTitle: '192-bit key', keySize: Crypto.KEYSIZE_AES192, algorithm: Crypto.ALGORITHM_AES128, options: Crypto.OPTION_PKCS7PADDING },
@@ -15,7 +15,7 @@ App.UI = (function () {
 			{ title: 'RC2', subTitle: '1024-bit key', keySize: Crypto.KEYSIZE_MAXRC2, algorithm: Crypto.ALGORITHM_RC2, options: Crypto.OPTION_PKCS7PADDING }
 		];
 	}
-	if (isAndroid) {
+	if (OS_ANDROID) {
 		algorithms = [
 			{ title: 'AES-128', subTitle: '128-bit key', keySize: Crypto.KEYSIZE_AES128, algorithm: Crypto.ALGORITHM_AES128, options: Crypto.OPTION_PKCS7PADDING },
 			{ title: 'AES-128', subTitle: '192-bit key', keySize: Crypto.KEYSIZE_AES192, algorithm: Crypto.ALGORITHM_AES128, options: Crypto.OPTION_PKCS7PADDING },
@@ -95,7 +95,6 @@ App.UI = (function () {
 
 	function openDemoWindow(controller) {
 		var demoWindow = Ti.UI.createWindow({
-			backgroundColor: 'white',
 			layout: 'vertical'
 		});
 
