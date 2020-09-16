@@ -2,6 +2,6 @@
 library 'pipeline-library'
 
 buildModule {
-	sdkVersion = '9.0.0.v20200205142057'
-	iosLabels = 'osx && xcode-11'
+	sdkVersion = '9.2.0.v20200915123928'
+	iosLabels = 'osx && xcode-12'
 }
