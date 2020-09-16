@@ -18,11 +18,6 @@ var App = {
 };
 global.App = App;
 
-var isAndroid = Ti.Platform.name === 'android';
-global.isAndroid = isAndroid;
-var isiOS = Ti.Platform.name === 'iOS' || Ti.Platform.name === 'iPhone OS';
-global.isiOS = isiOS;
-
 // Load the crypto modules
 var Crypto = require('ti.crypto');
 global.Crypto = Crypto;

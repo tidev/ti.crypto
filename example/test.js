@@ -387,7 +387,7 @@ testAlgorithm({
 	multiple: [ 'Titanium Crypto Module', 'Some additional text to encrypt' ],
 	multipleEncrypted: [ 'WNaIeDZqUTMPdlHm35r3Uw==', 'WNaIeDZqUTMPdlHm35r3U9R50OumHt987wOrM7GuNVJ+m9+ZR/03jngU6vPygXrR' ]
 });
-if (isiOS) {
+if (OS_IOS) {
 	testAlgorithm({
 		id: 'RC4xMin',
 		keySize: Crypto.KEYSIZE_MINRC4,
