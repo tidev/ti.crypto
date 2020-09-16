@@ -14,9 +14,9 @@
     }
   ],
   "globals": {
-    "App": "writeable",
+    "App": "writable",
     "Crypto": "readonly",
-    "isiOS": "readonly",
-    "isAndroid": "readonly"
+    "OS_ANDROID": "readonly",
+    "OS_IOS": "readonly"
   }
 }
