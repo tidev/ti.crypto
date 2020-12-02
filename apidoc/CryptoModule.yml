@@ -2,6 +2,8 @@
 name: Modules.Crypto
 summary: Add-on Crypto module
 description: |
+    <p class="note">This feature requires a Pro or Enterprise subscription!</p>
+
     This module provides access to various encryption and decryption algorithms, and string encodings.
 
     ## Getting Started
