@@ -11,12 +11,12 @@ description: |
 
     The general operation of a Cryptor is: 
 
-    1. Initialize it with raw key data and other optional fields with crypto.createCryptor()
-    2. Process input data via one or more calls to cryptor.update()
-    3. Obtain possible remaining output data with cryptor.final()
-    4. The cryptor object is disposed of by setting the cryptor variable to null. The cryptor object can be reused (with the same key data as provided to crypto.createCryptor()) by calling cryptor.reset() or cryptor.release().
+    1. Initialize it with raw key data and other optional fields with `crypto.createCryptor()`
+    2. Process input data via one or more calls to `cryptor.update()`
+    3. Obtain possible remaining output data with `cryptor.final()`
+    4. The cryptor object is disposed of by setting the `cryptor` variable to `null`. The cryptor object can be reused (with the same key data as provided to `crypto.createCryptor()`) by calling `cryptor.reset()` or `cryptor.release()`.
 
-    Alternatively, cryptor.encrypt() and cryptor.decrypt() methods are provided for a stateless, one-shot encrypt or decrypt operation.
+    Alternatively, `cryptor.encrypt()` and `cryptor.decrypt()` methods are provided for a stateless, one-shot encrypt or decrypt operation.
 extends: Titanium.Proxy
 since: { android: "4.0.0", iphone: "4.0.0", ipad: "4.0.0" }
 platforms: [android, iphone, ipad]
@@ -33,47 +33,45 @@ properties:
         Indicates if the dataOut buffer should be resized to the size needed to hold the result of the operation.
     type: Boolean
     default: true
-    platforms: [android, iphone, ipad]
+
   - name: operation
     summary: |
         Used in the [capture](Modules.Barcode.capture) and [parse](Modules.Barcode.parse) methods
         and the [success](Modules.Barcode.success) event to specify accepted formats.
     type: Number
     default: Modules.Crypto.ENCRYPT
-    platforms: [android, iphone, ipad]
+
   - name: algorithm
     summary: |
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
         [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
     type: Number
     default: Modules.Crypto.ALGORITHM_AES128
-    platforms: [android, iphone, ipad]
+
   - name: options
     summary: |
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
         [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
     type: Number
     default: 0
-    platforms: [android, iphone, ipad]
+
   - name: key
     summary: |
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
         [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
     type: Titanium.Buffer
     default: null
-    platforms: [android, iphone, ipad]
+
   - name: initializationVector
     summary: |
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt),
         [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods.
     type: Titanium.Buffer
     default: null
-    platforms: [android, iphone, ipad]
 
 methods:
   - name: encrypt
     summary: Stateless, one-shot encryption operation.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: dataIn
         summary: The Titanium.Buffer object containing the data to encrypt
@@ -107,7 +105,6 @@ methods:
 
   - name: decrypt
     summary: Stateless, one-shot decryption operation.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: dataIn
         summary: The Titanium.Buffer object containing the data to decrypt
@@ -141,7 +138,6 @@ methods:
 
   - name: getOutputLength
     summary: getOutputLength is used to determine the output buffer size required to process a given input size.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: dataInLength
         summary: The number of bytes for the operation
@@ -158,7 +154,6 @@ methods:
 
   - name: update
     summary: update is used to encrypt or decrypt data. This method can be called multiple times. The caller does not need to align input data lengths to block sizes; input is buffered as necessary for block ciphers.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: dataIn
         summary: The Titanium.Buffer object containing the data to decrypt
@@ -192,7 +187,6 @@ methods:
 
   - name: finish
     summary: Finishes encryption and decryption operations and obtains the final data output.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: dataOut
         summary: |
@@ -218,7 +212,6 @@ methods:
 
   - name: reset
     summary: reset reinitializes an existing cryptor object with a (possibly) new initialization vector.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: initializationVector
         summary: The Titanium.Buffer object containing the initialization vector.
@@ -239,7 +232,6 @@ methods:
 
   - name: release
     summary: release will dispose of the internal cryptor data
-    platforms: [android, iphone, ipad]
     returns:
       type: Number
       summary: |

@@ -15,10 +15,11 @@ description: |
 
     To access this module from JavaScript, you would do the following:
 
-      var crypto = require("ti.crypto");
+    ``` javascript
+    var crypto = require("ti.crypto");
+    ```
 
-    The crypto variable is a reference to the Module object.
-
+    The `crypto` variable is a reference to the Module object.
 extends: Titanium.Module
 since: { android: "4.0.0", iphone: "4.0.0", ipad: "4.0.0" }
 platforms: [android, iphone, ipad]
@@ -33,14 +34,12 @@ properties:
         to report success for the operation.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: STATUS_ERROR
     summary: |
         Used in the [Cryptor](Modules.Crypto.Cryptor) methods to report a generic error for an operation.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: STATUS_PARAMERROR
     summary: |
@@ -48,7 +47,6 @@ properties:
         with the supplied parameters or properties.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: STATUS_BUFFERTOOSMALL
     summary: |
@@ -56,7 +54,6 @@ properties:
         when the buffer is not long enough to contain the result.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: STATUS_MEMORYFAILURE
     summary: |
@@ -66,7 +63,6 @@ properties:
         Only reported by iOS (though the constant is still defined on Android).
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: STATUS_ALIGNMENTERROR
     summary: |
@@ -78,7 +74,6 @@ properties:
         Only reported by iOS (though the constant is still defined on Android).
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: STATUS_DECODEERROR
     summary: |
@@ -88,7 +83,6 @@ properties:
         Only reported by iOS (though the constant is still defined on Android).
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: STATUS_UNIMPLEMENTED
     summary: |
@@ -99,7 +93,6 @@ properties:
         Otherwise this status is only reported by iOS for the methods performing operations.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: ENCRYPT
     summary: |
@@ -107,7 +100,6 @@ properties:
         Used in the [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the operation should be to encrypt data.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: DECRYPT
     summary: |
@@ -115,89 +107,76 @@ properties:
         Used in the [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the operation should be to decrypt data.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: ALGORITHM_AES128
     summary: |
         Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
 
-        See https://en.wikipedia.org/wiki/Advanced_Encryption_Standard for more details.
+        See [Advanced_Encryption_Standard](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) for more details.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: ALGORITHM_DES
     summary: |
         Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
 
-        See https://en.wikipedia.org/wiki/Data_Encryption_Standard for more details.
+        See [Data_Encryption_Standard](https://en.wikipedia.org/wiki/Data_Encryption_Standard) for more details.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: ALGORITHM_3DES
     summary: |
         Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
 
-        See https://en.wikipedia.org/wiki/Triple_DES for more details.
+        See [Triple_DES](https://en.wikipedia.org/wiki/Triple_DES) for more details.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: ALGORITHM_CAST
     summary: |
         Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
 
-        See https://en.wikipedia.org/wiki/CAST-128 for more details.
+        See [CAST-128](https://en.wikipedia.org/wiki/CAST-128) for more details.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: ALGORITHM_RC4
     summary: |
         Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
-        
-        See https://en.wikipedia.org/wiki/RC4 for more details.
+            See [RC4](https://en.wikipedia.org/wiki/RC4) for more details.
 
         Note that while defined on Android, this algorithm is unimplemented.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: ALGORITHM_RC2
     summary: |
         Set on the [algorithm](Modules.Crypto.Cryptor.algorithm) property.
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
-        
-        See https://en.wikipedia.org/wiki/RC2 for more details.
+            See [RC2](https://en.wikipedia.org/wiki/RC2) for more details.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: OPTION_PKCS7PADDING
     summary: |
         Set on the [options](Modules.Crypto.Cryptor.options) property.
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
-        
-        See https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS#5_and_PKCS#7 for more details.
+            See [Wikipedia](https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS#5_and_PKCS#7) for more details.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: OPTION_ECBMODE
     summary: |
         Set on the [options](Modules.Crypto.Cryptor.options) property.
         Used in the [encrypt](Modules.Crypto.Cryptor.encrypt), [decrypt](Modules.Crypto.Cryptor.decrypt), [update](Modules.Crypto.Cryptor.update) and [finish](Modules.Crypto.Cryptor.finish) methods to indicate the algorithm used.
-        
-        See https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Electronic_Codebook_(ECB) for more details.
+            See [Wikipedia](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Electronic_Codebook_(ECB)) for more details.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_AES128
     summary: |
@@ -206,7 +185,6 @@ properties:
     type: Number
     permission: read-only
     value: 16
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_AES192
     summary: |
@@ -215,7 +193,6 @@ properties:
     type: Number
     permission: read-only
     value: 24
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_AES256
     summary: |
@@ -224,7 +201,6 @@ properties:
     type: Number
     permission: read-only
     value: 32
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_DES
     summary: |
@@ -233,7 +209,6 @@ properties:
     type: Number
     permission: read-only
     value: 8
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_3DES
     summary: |
@@ -242,7 +217,6 @@ properties:
     type: Number
     permission: read-only
     value: 24
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_MINCAST
     summary: |
@@ -251,7 +225,6 @@ properties:
     type: Number
     permission: read-only
     value: 5
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_MAXCAST
     summary: |
@@ -260,7 +233,6 @@ properties:
     type: Number
     permission: read-only
     value: 16
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_MINRC4
     summary: |
@@ -269,7 +241,6 @@ properties:
     type: Number
     permission: read-only
     value: 1
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_MAXRC4
     summary: |
@@ -278,7 +249,6 @@ properties:
     type: Number
     permission: read-only
     value: 512
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_MINRC2
     summary: |
@@ -287,7 +257,6 @@ properties:
     type: Number
     permission: read-only
     value: 1
-    platforms: [android, iphone, ipad]
 
   - name: KEYSIZE_MAXRC2
     summary: |
@@ -296,49 +265,42 @@ properties:
     type: Number
     permission: read-only
     value: 128
-    platforms: [android, iphone, ipad]
 
   - name: BLOCKSIZE_AES128
     summary:  Number of bytes for blocks of the related algorithm.
     type: Number
     permission: read-only
     value: 16
-    platforms: [android, iphone, ipad]
 
   - name: BLOCKSIZE_DES
     summary:  Number of bytes for blocks of the related algorithm.
     type: Number
     permission: read-only
     value: 8
-    platforms: [android, iphone, ipad]
 
   - name: BLOCKSIZE_3DES
     summary:  Number of bytes for blocks of the related algorithm.
     type: Number
     permission: read-only
     value: 8
-    platforms: [android, iphone, ipad]
 
   - name: BLOCKSIZE_CAST
     summary:  Number of bytes for blocks of the related algorithm.
     type: Number
     permission: read-only
     value: 8
-    platforms: [android, iphone, ipad]
 
   - name: BLOCKSIZE_RC2
     summary:  Number of bytes for blocks of the related algorithm.
     type: Number
     permission: read-only
     value: 8
-    platforms: [android, iphone, ipad]
 
   - name: TYPE_BLOB
     summary: |
         Used in the [encodeData](Modules.Crypto.encodeData) method to specify expected input is a Ti.Blob instance.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: TYPE_HEXSTRING
     summary: |
@@ -346,7 +308,6 @@ properties:
         to specify expected string format. A hexadecimal formatted string. Each byte is represented by 2 hexadecimal numbers.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
   - name: TYPE_BASE64STRING
     summary: |
@@ -354,14 +315,12 @@ properties:
         to specify expected string format. A Base64 encoded string.
     type: Number
     permission: read-only
-    platforms: [android, iphone, ipad]
 
 methods:
 
   - name: encodeData
     summary: Encodes the source into the destination buffer using the specified data type. This is a codec method used for converting data to a destination buffer.
     since: "3.1.0"
-    platforms: [android, iphone, ipad]
     parameters:
       - name: dictionary
         summary: a dictionary with keys
@@ -372,7 +331,6 @@ methods:
 
   - name: decodeData
     summary: Decodes a source buffer into a string using the specified data type. This is a codec method used for converting data from a source buffer into a displayable string.
-    platforms: [android, iphone, ipad]
     parameters:
       - name: dictionary
         summary: a dictionary with keys
