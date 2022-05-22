@@ -34,5 +34,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v2
       with:
         event-type: regen-api-docs
+        token: ${{ secrets.REGEN_DOCS_GITHUB_TOKEN }}
         repository: tidev/titanium-docs
-        token: ${{ secrets.REGEN_DOCS_GITHUB_TOKEN2 }}
