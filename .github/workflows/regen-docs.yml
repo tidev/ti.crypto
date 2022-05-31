@@ -27,12 +27,12 @@ jobs:
       run: npm ci
       if: steps.node-cache.outputs.cache-hit != 'true'
 
-    # - run: npm run lint:docs
-    #  name: Lint
+    - run: npm run lint:docs
+      name: Lint
       
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v2
       with:
         event-type: regen-api-docs
-        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        token: ${{ secrets.REGEN_DOCS_GITHUB_TOKEN }}
         repository: tidev/titanium-docs
