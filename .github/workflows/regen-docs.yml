@@ -27,8 +27,8 @@ jobs:
       run: npm ci
       if: steps.node-cache.outputs.cache-hit != 'true'
 
-    - run: npm run lint:docs
-      name: Lint
+    # - run: npm run lint:docs
+    #  name: Lint
       
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v2
