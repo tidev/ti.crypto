@@ -342,14 +342,14 @@ typedef struct {
     }
   }
 
-  //NSLog(@"Preparing to crypt");
-  //NSLog(@"Input length: %d value: %@", cryptData.dataInLength, [cryptData.dataInBuffer data]);
-  //NSLog(@"Output length: %d", cryptData.dataOutLength);
-  //NSLog(@"Operation: %d",cryptOptions.operation);
-  //NSLog(@"Algorithm: %d",cryptOptions.algorithm);
-  //NSLog(@"Options: %d",cryptOptions.options);
-  //NSLog(@"Key: %@", [cryptOptions.key data]);
-  //NSLog(@"InitializationVector: %@",[cryptOptions.initializationVector data]);
+  // NSLog(@"Preparing to crypt");
+  // NSLog(@"Input length: %d value: %@", cryptData.dataInLength, [cryptData.dataInBuffer data]);
+  // NSLog(@"Output length: %d", cryptData.dataOutLength);
+  // NSLog(@"Operation: %d",cryptOptions.operation);
+  // NSLog(@"Algorithm: %d",cryptOptions.algorithm);
+  // NSLog(@"Options: %d",cryptOptions.options);
+  // NSLog(@"Key: %@", [cryptOptions.key data]);
+  // NSLog(@"InitializationVector: %@",[cryptOptions.initializationVector data]);
 
   size_t numBytesMoved = 0;
   CCCryptorStatus result = CCCrypt(operation,
@@ -368,7 +368,7 @@ typedef struct {
     if (resizeBuffer) {
       [cryptData.dataOutBuffer setLength:[NSNumber numberWithUnsignedInteger:numBytesMoved]];
     }
-    //NSLog(@"DataOut: %@", [cryptData.dataOutBuffer data]);
+    // NSLog(@"DataOut: %@", [cryptData.dataOutBuffer data]);
   } else {
     NSLog(@"[ERROR] Error during crypt operation - %d", result);
   }
