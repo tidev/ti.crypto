@@ -1,5 +1,5 @@
 name: iOS Build
-on: 
+on:
   push:
     paths-ignore:
     - 'android/**'
@@ -9,10 +9,10 @@ on:
     - 'android/**'
     - 'apidoc/**'
   workflow_dispatch:
-  
+
 jobs:
   ios:
-    runs-on: macos-latest
+    runs-on: macos-13
     name: iOS
     env:
       SDK_VERSION: 12.5.1.GA
