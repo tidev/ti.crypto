@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 5.0.1
+version: 6.0.0
 apiversion: 4
 architectures: arm64-v8a armeabi-v7a x86 x86_64
 description: This module provides access to various encryption and decryption algorithms, and string encodings.
@@ -15,4 +15,4 @@ name: crypto
 moduleid: ti.crypto
 guid: 5041eaca-a895-4229-a44b-de2f582c9133
 platform: android
-minsdk: 9.0.0
+minsdk: 12.7.0
